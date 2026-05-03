@@ -109,7 +109,7 @@ LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation : "
 #Affichage d'informations sur les produits
 INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3:.2f} €"
 INFO_COUT_STOCK = "Total du stock : {0:0.2f} €"
-INFO_VALEUR_ACTU = "\tModification de "
+INFO_VALEUR_ACTU = "\tModification en cours de "
 INFO_PRODUIT_AJOUTE = "\tAjout de '{0}'"
 INFO_STOCK_VIDE = (
     "Aucun produit enregistré.\nPour ajouter un produit aller dans "
@@ -135,7 +135,8 @@ ANO_MSG_NOUVEAU_FICHIER_STOCK = (
     "modification ou suppression d'un produit.".format(FICHIER_STOCK)
 )
 NO_ANO = "Produit OK"
-ANO_NOM_INEXISTANTE = "Pas de champ '{0}', le produit sera ignoré".format(CLE_NOM)
+ANO_NOM_INEXISTANT = "Pas de champ '{0}', le produit sera ignoré".format(CLE_NOM)
+ANO_NOM_DOUBLON = "Le produit '{0}' existe déjà dans le stock, il sera ignoré."
 ANO_CHAMP_PAS_STR = (
     "Le champ '{0}' n'est pas une chaîne de caractères, "
     "le produit sera ignoré"

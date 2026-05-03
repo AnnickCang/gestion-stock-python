@@ -77,7 +77,7 @@ def verifier_et_nettoyer_produit(prod: types_structure.Produit
 
     #Vérification du nom
     if const.CLE_NOM not in prod:
-        anomalies_produit.append(const.ANO_NOM_INEXISTANTE)
+        anomalies_produit.append(const.ANO_NOM_INEXISTANT)
     elif not isinstance(prod[const.CLE_NOM], str):
         anomalies_produit.append(const.ANO_CHAMP_PAS_STR.format(const.CLE_NOM))
     else:
@@ -124,12 +124,21 @@ def charger_stock(
             stock = json.load(f)
             stock_nettoye = []
             anomalies = []
+            cles_noms_deja_vus = set()
             no_prod = 0
             for prod in stock:
                 no_prod += 1
                 prod_nettoye, msgs_anomalies = verifier_et_nettoyer_produit(prod)
                 if prod_nettoye is not None:
-                    stock_nettoye.append(prod_nettoye)
+                    nom_normalise = normaliser_chaine_pour_comparaison(
+                        prod_nettoye[const.CLE_NOM])
+                    if nom_normalise in cles_noms_deja_vus:
+                        msgs_anomalies.append(const.ANO_NOM_DOUBLON.format(
+                            prod_nettoye[const.CLE_NOM])
+                        )
+                    else:
+                        cles_noms_deja_vus.add(nom_normalise)
+                        stock_nettoye.append(prod_nettoye)
                 for ano in msgs_anomalies:
                     txt_anomalie = const.ANO_NO_PRODUIT.format(no_prod)
                     anomalies.append(txt_anomalie + ano)
