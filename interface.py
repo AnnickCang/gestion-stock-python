@@ -7,14 +7,29 @@ from gestion_stock import trouver_produit
 def effacer_ecran_terminal()-> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def demander_nombre(message: str, nb_entier: bool)-> int | float:
-    """Renvoie l'entrée utilisateur après l'avoir convertie 
-    en entier ou en float"""
+def demander_retour_menu()-> bool:
     while True:
-        reponse = input(message)
+        reponse = input(const.QST_RETOUR_MENU_PRINCIPAL).strip()
+        match reponse.capitalize():
+            case const.CTRL_REP_OUI:
+                return True
+            case const.CTRL_REP_NON:
+                return False
+        print(const.CTRL_REP_OUI_NON)
+
+def demander_nombre(message: str, nb_entier: bool)-> int | float | None:
+    """Renvoie l'entrée utilisateur après l'avoir convertie (entier ou float)
+    ou None (si champ vide avec validation retour au menu principal)"""
+    while True:
+        reponse = input(message).strip()
+        if reponse == "":
+            if demander_retour_menu():
+                return None
+            continue
+
         try:
             if nb_entier:
-                valeur =  int(reponse)
+                valeur = int(reponse)
                 if valeur >= 0:
                     return valeur
                 else:
@@ -31,7 +46,7 @@ def demander_nombre(message: str, nb_entier: bool)-> int | float:
 def demander_info_produit(stock: list[types_structure.Produit]
 )-> types_structure.Produit | None:
     """Renvoie un dict Produit (valeurs saisies par l'utilisateur) 
-    ou None (si saisie annulée avec nom à vide)"""
+    ou None si la saisie est annulée"""
 
     nom = demander_nom_produit(const.LBL_NOM_PRODUIT)
     if nom is None:
@@ -53,8 +68,14 @@ def demander_info_produit(stock: list[types_structure.Produit]
             )
 
         quantite = demander_nombre(const.LBL_QUANTITE_PRODUIT, True)
+        if quantite is None:
+            return None
         seuil = demander_nombre(const.LBL_SEUIL_PRODUIT, True)
+        if seuil is None:
+            return None
         prix = demander_nombre(const.LBL_PRIX_PRODUIT, False)
+        if prix is None:
+            return None
         return {
             const.CLE_NOM: nom, 
             const.CLE_QUANTITE: quantite, 
@@ -160,7 +181,7 @@ def afficher_titre_sous_menu(titre: str,
         largeur_cadre = const.LARGEUR_CADRE_INVENTAIRE
     print(f"{titre:^{largeur_cadre}}")
     if msg_retour:
-        print(f"{const.NAV_MSG_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
+        print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
 
 def afficher_info_produit(prod: types_structure.Produit | None)-> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
