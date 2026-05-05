@@ -1,6 +1,7 @@
 import types_structure
 import constantes as const
 from donnees import sauvegarder_stock
+from donnees import normaliser_chaine_pour_comparaison as norm
 
 def trouver_produit(stock: list[types_structure.Produit], 
                     nom: str
@@ -8,7 +9,7 @@ def trouver_produit(stock: list[types_structure.Produit],
     """Retourne le produit correspondant au nom donné 
     ou None s'il n'existe pas"""
     for prod in stock:
-        if prod[const.CLE_NOM].lower() == nom.lower():
+        if norm(prod[const.CLE_NOM]) == norm(nom):
             return prod
     return None
 
