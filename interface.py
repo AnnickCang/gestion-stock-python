@@ -59,7 +59,7 @@ def demander_info_produit(stock: list[types_structure.Produit]
             print(
                 const.INFO_VALEUR_ACTU,
                 const.INFO_PRODUIT.format(
-                    nom,
+                    prod[const.CLE_NOM],
                     prod[const.CLE_QUANTITE],
                     prod[const.CLE_SEUIL],
                     prod[const.CLE_PRIX]

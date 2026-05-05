@@ -58,7 +58,9 @@ def main():
                         else:
                             if ifc.demander_confirmation_suppression():
                                 gs.supprimer_produit(stock, prod)
-                                print(const.INFO_PROD_SUPPRIME.format(nom_prod))
+                                print(const.INFO_PROD_SUPPRIME.format(
+                                    prod[const.CLE_NOM])
+                                )
                         print()
                     else:
                         break
