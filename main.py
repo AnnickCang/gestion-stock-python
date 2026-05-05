@@ -40,10 +40,9 @@ def main():
                         if gs.ajouter_ou_modifier_produit(stock, 
                                                           **donnees_produit
                         ) == const.RETOUR_AJOUT:
-                            print(const.INFO_PROD_AJOUTE)
+                            ifc.afficher_produit_ajoute()
                         else:
-                            print(const.INFO_PROD_MODIFIE)
-                        print()
+                            ifc.afficher_produit_modifie()
             case const.MENUP_CHOIX_SUPPRESSION:
                 while True:
                     ifc.afficher_titre_sous_menu(
@@ -54,14 +53,13 @@ def main():
                     if nom_prod:
                         prod = gs.trouver_produit(stock, nom_prod)
                         if prod is None:
-                            print(const.INFO_PROD_NON_TROUVE)
+                            ifc.afficher_produit_non_trouve()
                         else:
                             if ifc.demander_confirmation_suppression():
                                 gs.supprimer_produit(stock, prod)
-                                print(const.INFO_PROD_SUPPRIME.format(
-                                    prod[const.CLE_NOM])
+                                ifc.afficher_produit_supprime(
+                                    prod[const.CLE_NOM]
                                 )
-                        print()
                     else:
                         break
             case const.MENUP_CHOIX_RECHERCHE:
@@ -74,7 +72,6 @@ def main():
                     if nom_prod:
                         prod = gs.trouver_produit(stock, nom_prod)
                         ifc.afficher_info_produit(prod)
-                        print()
                     else:
                         break
             case const.MENUP_CHOIX_RENOMMAGE:
@@ -87,7 +84,7 @@ def main():
                     if nom_prod:
                         prod = gs.trouver_produit(stock, nom_prod)
                         if prod is None:
-                            print(const.INFO_PROD_NON_TROUVE)
+                            ifc.afficher_produit_non_trouve()
                         else:
                             nouveau_nom = ifc.demander_nouveau_nom(
                                 stock, 
@@ -97,12 +94,8 @@ def main():
                                 break
                             else:
                                 gs.renommer_produit(stock, prod, nouveau_nom)
-                                print(const.INFO_PROD_RENOMME.format(
-                                    nom_prod, 
-                                    nouveau_nom
-                                    )
-                                )
-                        print()
+                                ancien_nom = prod[const.CLE_NOM]
+                                ifc.afficher_produit_renomme(ancien_nom, nouveau_nom)
                     else:
                         break
             case const.MENUP_CHOIX_INVENTAIRE:
