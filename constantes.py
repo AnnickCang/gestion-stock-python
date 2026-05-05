@@ -39,8 +39,8 @@ ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE = (
 NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU = (
     "\n('Entrée' pour revenir au menu principal) "
 )
-NAV_MSG_VIDE_RETOUR_MENU = (
-    "('Nom à vide + Entrée' pour revenir au menu principal)"
+NAV_MSG_SAISIE_VIDE_RETOUR_MENU = (
+    "(Laisser vide et appuyer sur 'Entrée' pour revenir au menu principal)"
 )
 NAV_MSG_ENTREE_POUR_CONTINUER = "\n(Appuyer sur 'Entrée' pour continuer)"
 
@@ -57,6 +57,9 @@ CTRL_REP_NON = "N"
 
 #Questions
 QST_SUPPRESSION = "Suppression (o/n) ? "
+QST_RETOUR_MENU_PRINCIPAL = (
+    "Annuler la saisie en cours et revenir au menu principal (o/n) ? "
+)
 
 #Menu principal et sous menus
 TITRE_MENU_PRINCIPAL = "--- MENU PRINCIPAL ---"
