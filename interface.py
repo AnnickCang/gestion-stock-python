@@ -64,7 +64,7 @@ def demander_info_produit(stock: list[types_structure.Produit]
 
 def demander_nom_produit(msg: str)-> str | None:
     while True:
-        nom: str = input(msg)
+        nom: str = input(msg).strip()
         if nom == "":
             return None
         elif len(nom) > const.LARGEUR_COL:
@@ -90,7 +90,7 @@ def demander_nouveau_nom(stock: list[types_structure.Produit],
 
 def demander_confirmation_suppression()-> bool:
     while True:
-        reponse = input(const.QST_SUPPRESSION)
+        reponse = input(const.QST_SUPPRESSION).strip()
         match reponse.capitalize():
             case const.CTRL_REP_OUI:
                 return True
@@ -228,7 +228,7 @@ def demander_choix_menu()-> str:
     print(const.MENUP_SM_INVENTAIRE)
     print(const.MENUP_SM_QUITTER)
 
-    choix = input(const.MENUP_CHOIX)
+    choix = input(const.MENUP_CHOIX).strip()
 
     while choix not in const.LISTE_CHOIX:
         choix = input(const.MENUP_REPETER_CHOIX)
