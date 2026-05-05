@@ -4,6 +4,9 @@ import types_structure
 import constantes as const
 from gestion_stock import trouver_produit
 
+def _afficher_separateur()-> None:
+    print()
+
 def effacer_ecran_terminal()-> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -193,6 +196,7 @@ def afficher_info_produit(prod: types_structure.Produit | None)-> None:
                                         prod[const.CLE_SEUIL],
                                         prod[const.CLE_PRIX])
         )
+    _afficher_separateur()
         
 def afficher_inventaire(stock: list[types_structure.Produit])-> None:
     """Affiche les données relatives à chaque produit ainsi que le montant
@@ -255,3 +259,23 @@ def demander_choix_menu()-> str:
         choix = input(const.MENUP_REPETER_CHOIX)
     
     return choix
+
+def afficher_produit_ajoute()-> None:
+    print(const.INFO_PROD_AJOUTE)
+    _afficher_separateur()
+
+def afficher_produit_modifie()-> None:
+    print(const.INFO_PROD_MODIFIE)
+    _afficher_separateur()
+
+def afficher_produit_non_trouve()-> None:
+    print(const.INFO_PROD_NON_TROUVE)
+    _afficher_separateur()
+
+def afficher_produit_supprime(nom_prod: str)-> None:
+    print(const.INFO_PROD_SUPPRIME.format(nom_prod))
+    _afficher_separateur()
+
+def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str)-> None:
+    print(const.INFO_PROD_RENOMME.format(ancien_nom, nouveau_nom))
+    _afficher_separateur()
