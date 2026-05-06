@@ -55,10 +55,12 @@ def main():
                         if prod is None:
                             ifc.afficher_produit_non_trouve()
                         else:
-                            if ifc.demander_confirmation_suppression():
+                            nom_produit_a_supprimer = prod[const.CLE_NOM]
+                            if ifc.demander_confirmation_suppression(
+                                nom_produit_a_supprimer):
                                 gs.supprimer_produit(stock, prod)
                                 ifc.afficher_produit_supprime(
-                                    prod[const.CLE_NOM]
+                                    nom_produit_a_supprimer
                                 )
                     else:
                         break
