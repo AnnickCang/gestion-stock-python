@@ -69,3 +69,18 @@ def renommer_produit(stock: list[types_structure.Produit],
 )-> None:
     prod[const.CLE_NOM] = nouveau_nom
     sauvegarder_stock(stock)
+
+def verifier_nom_disponible(stock: list[types_structure.Produit],
+                            ancien_nom: str,
+                            nouveau_nom: str
+)-> bool:
+    """Retourne True si le nom est disponible.
+    Un nom normalisé identique à celui du produit courant est autorisé
+    pour permettre la modification de la casse ou des accents."""
+    for prod in stock:
+        if norm(nouveau_nom) == norm(prod[const.CLE_NOM]):
+            if norm(ancien_nom) == norm(prod[const.CLE_NOM]):
+                continue
+            return False
+    
+    return True

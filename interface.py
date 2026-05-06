@@ -96,21 +96,12 @@ def demander_nom_produit(msg: str)-> str | None:
         else:
             return nom
 
-def demander_nouveau_nom(stock: list[types_structure.Produit],
-                         nom_actuel: str
-)-> str | None:
-    while True:
-        nouveau_nom = demander_nom_produit(const.LBL_NOUVEAU_NOM_PRODUIT)
-        if nouveau_nom is None:
-            return None
-        else:
-            if nouveau_nom.lower() == nom_actuel.lower():
-                print(const.CTRL_NOM_DIFFERENT.format(nom_actuel))
-            else:
-                if trouver_produit(stock, nouveau_nom) is None:
-                   return nouveau_nom
-                else:
-                    print(const.CTRL_NOM_EXISTE_DEJA.format(nouveau_nom))
+def demander_nouveau_nom()-> str | None:
+    nouveau_nom = demander_nom_produit(const.LBL_NOUVEAU_NOM_PRODUIT)
+    if nouveau_nom is None:
+        return None
+    
+    return nouveau_nom
 
 def demander_confirmation_suppression()-> bool:
     while True:
@@ -279,3 +270,6 @@ def afficher_produit_supprime(nom_prod: str)-> None:
 def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str)-> None:
     print(const.INFO_PROD_RENOMME.format(ancien_nom, nouveau_nom))
     _afficher_separateur()
+
+def afficher_produit_existe(nom: str)-> None:
+    print(const.CTRL_NOM_EXISTE_DEJA.format(nom))
