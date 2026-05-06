@@ -81,23 +81,32 @@ def main():
                         True
                     )
                     nom_prod = ifc.demander_nom_produit(const.LBL_NOM_PRODUIT)
-                    if nom_prod:
-                        prod = gs.trouver_produit(stock, nom_prod)
-                        if prod is None:
-                            ifc.afficher_produit_non_trouve()
-                        else:
-                            nouveau_nom = ifc.demander_nouveau_nom(
-                                stock, 
-                                nom_prod
-                            )
-                            if nouveau_nom is None:
-                                break
-                            else:
-                                gs.renommer_produit(stock, prod, nouveau_nom)
-                                ancien_nom = prod[const.CLE_NOM]
-                                ifc.afficher_produit_renomme(ancien_nom, nouveau_nom)
-                    else:
+                    if nom_prod is None:
                         break
+                        
+                    prod = gs.trouver_produit(stock, nom_prod)
+                    if prod is None:
+                        ifc.afficher_produit_non_trouve()
+                    else:
+                        retour_menu = False
+                        while True:
+                            nouveau_nom = ifc.demander_nouveau_nom()
+                            if nouveau_nom is None:
+                                retour_menu = True
+                                break
+                                
+                            if gs.verifier_nom_disponible(
+                                stock, prod[const.CLE_NOM], nouveau_nom
+                            ):
+                                ancien_nom = prod[const.CLE_NOM]
+                                gs.renommer_produit(stock, prod, nouveau_nom)
+                                ifc.afficher_produit_renomme(ancien_nom, nouveau_nom)
+                                break
+                                
+                            ifc.afficher_produit_existe(nouveau_nom)
+                        
+                        if retour_menu:
+                            break
             case const.MENUP_CHOIX_INVENTAIRE:
                 jour = datetime.today().strftime("%d/%m/%Y")
                 titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
