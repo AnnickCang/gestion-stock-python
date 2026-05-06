@@ -1,19 +1,12 @@
 import json
-import unicodedata
 
 import types_structure
 import constantes as const
-
-def normaliser_chaine_pour_comparaison(chaine: str)-> str:
-    """Renvoie une chaîne en minuscule et sans les accents"""
-    chaine_retour = unicodedata.normalize('NFD', chaine.lower())
-    chaine_retour = ''.join(c for c in chaine_retour
-                            if unicodedata.category(c) != 'Mn')
-    return chaine_retour
+from normalisation import normaliser_chaine_pour_comparaison as norm
 
 def trier_stock(stock: list[types_structure.Produit])-> None:
     """Trie le stock par nom de produit"""
-    stock.sort(key=lambda item: normaliser_chaine_pour_comparaison(item[const.CLE_NOM]))
+    stock.sort(key=lambda item: norm(item[const.CLE_NOM]))
 
 def verifier_champ_numerique(prod: types_structure.Produit,
                              champ: str,
@@ -130,8 +123,7 @@ def charger_stock(
                 no_prod += 1
                 prod_nettoye, msgs_anomalies = verifier_et_nettoyer_produit(prod)
                 if prod_nettoye is not None:
-                    nom_normalise = normaliser_chaine_pour_comparaison(
-                        prod_nettoye[const.CLE_NOM])
+                    nom_normalise = norm(prod_nettoye[const.CLE_NOM])
                     if nom_normalise in cles_noms_deja_vus:
                         msgs_anomalies.append(const.ANO_NOM_DOUBLON.format(
                             prod_nettoye[const.CLE_NOM])

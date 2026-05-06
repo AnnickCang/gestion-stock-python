@@ -1,7 +1,7 @@
 import types_structure
 import constantes as const
 from donnees import sauvegarder_stock
-from donnees import normaliser_chaine_pour_comparaison as norm
+from normalisation import normaliser_chaine_pour_comparaison as norm
 
 def trouver_produit(stock: list[types_structure.Produit], 
                     nom: str
