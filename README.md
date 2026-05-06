@@ -14,6 +14,7 @@ GestionDeStock/
 |- gestion_stock.py
 |- interface.py
 |- types_structure.py
+|- normalisation.py
 |- README.md
 |- .gitignore
 ```
