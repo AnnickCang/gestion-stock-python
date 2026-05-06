@@ -55,7 +55,7 @@ CTRL_REP_OUI = "O"
 CTRL_REP_NON = "N"
 
 #Questions
-QST_SUPPRESSION = "Suppression (o/n) ? "
+QST_SUPPRESSION = "Confirmer la suppression du produit '{0}' (o/n) ? "
 QST_RETOUR_MENU_PRINCIPAL = (
     "Annuler la saisie en cours et revenir au menu principal (o/n) ? "
 )

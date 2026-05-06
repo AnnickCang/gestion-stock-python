@@ -103,15 +103,18 @@ def demander_nouveau_nom()-> str | None:
     
     return nouveau_nom
 
-def demander_confirmation_suppression()-> bool:
+def demander_confirmation_suppression(nom_prod: str)-> bool:
     while True:
-        reponse = input(const.QST_SUPPRESSION).strip()
+        reponse = input(const.QST_SUPPRESSION.format(nom_prod)).strip()
         match reponse.capitalize():
             case const.CTRL_REP_OUI:
                 return True
             case const.CTRL_REP_NON:
+                _afficher_separateur()
                 return False
+        _afficher_separateur()
         print(const.CTRL_REP_OUI_NON)
+        _afficher_separateur()
 
 def afficher_noms_colonnes(pour_inventaire: bool = False)-> None:
     if not pour_inventaire:
