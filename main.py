@@ -120,7 +120,8 @@ def main():
                     else:
                         retour_menu = False
                         while True:
-                            nouveau_nom = ifc.demander_nouveau_nom()
+                            ancien_nom = prod[const.CLE_NOM]
+                            nouveau_nom = ifc.demander_nouveau_nom(ancien_nom)
                             if nouveau_nom is None:
                                 retour_menu = True
                                 break
@@ -128,7 +129,6 @@ def main():
                             if gs.verifier_nom_disponible(
                                 stock, prod[const.CLE_NOM], nouveau_nom
                             ):
-                                ancien_nom = prod[const.CLE_NOM]
                                 gs.renommer_produit(stock, prod, nouveau_nom)
                                 ifc.afficher_produit_renomme(ancien_nom, nouveau_nom)
                                 break
@@ -143,7 +143,7 @@ def main():
                 titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
                 ifc.afficher_titre_sous_menu(titre, pour_inventaire=True)
                 ifc.afficher_inventaire(stock)
-                
+
             case const.MENUP_CHOIX_QUITTER:
                 continuer = False                
 

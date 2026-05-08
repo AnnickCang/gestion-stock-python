@@ -106,7 +106,7 @@ LBL_NOM_PRODUIT = "Produit : "
 LBL_QUANTITE_PRODUIT = "Quantité : "
 LBL_SEUIL_PRODUIT = "Seuil : "
 LBL_PRIX_PRODUIT = "Prix : "
-LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation : "
+LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation de '{0}' : "
 
 #Affichage d'informations sur les produits
 INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3:.2f} €"
@@ -124,7 +124,7 @@ INFO_PROD_SUPPRIME = "\nLe produit '{0}' a été supprimé"
 INFO_AUCUNE_ALERTE = "\nStock OK, rien à recharger"
 INFO_PROD_RENOMME = "\nLe produit '{0}' a été renommé en '{1}'"
 INFO_RECHERCHE_STOCK_VIDE = "Le stock est vide : recherche impossible"
-INFO_SUPPRESION_STOCK_VIDE = "Le stock est vide : suppression impossible"
+INFO_SUPPRESSION_STOCK_VIDE = "Le stock est vide : suppression impossible"
 INFO_RENOMMAGE_STOCK_VIDE = "Le stock est vide : renommage impossible"
 
 

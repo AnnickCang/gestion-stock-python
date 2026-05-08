@@ -105,8 +105,10 @@ def demander_nom_produit(msg: str)-> str | None:
         else:
             return nom
 
-def demander_nouveau_nom()-> str | None:
-    nouveau_nom = demander_nom_produit(const.LBL_NOUVEAU_NOM_PRODUIT)
+def demander_nouveau_nom(ancien_nom: str)-> str | None:
+    nouveau_nom = demander_nom_produit(
+        const.LBL_NOUVEAU_NOM_PRODUIT.format(ancien_nom)
+    )
     if nouveau_nom is None:
         return None
     
@@ -295,7 +297,7 @@ def afficher_recherche_impossible()-> None:
     _attendre_entree_retour_menu()
 
 def afficher_suppression_impossible()-> None:
-    print(const.INFO_SUPPRESION_STOCK_VIDE)
+    print(const.INFO_SUPPRESSION_STOCK_VIDE)
     _attendre_entree_retour_menu()
 
 def afficher_renommage_impossible()-> None:
