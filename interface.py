@@ -291,5 +291,13 @@ def afficher_suggestions(suggestions: list[str])-> None:
     _afficher_separateur()
 
 def afficher_recherche_impossible()-> None:
-    print(const.RECH_STOCK_VIDE)
+    print(const.INFO_RECHERCHE_STOCK_VIDE)
+    _attendre_entree_retour_menu()
+
+def afficher_suppression_impossible()-> None:
+    print(const.INFO_SUPPRESION_STOCK_VIDE)
+    _attendre_entree_retour_menu()
+
+def afficher_renommage_impossible()-> None:
+    print(const.INFO_RENOMMAGE_STOCK_VIDE)
     _attendre_entree_retour_menu()
