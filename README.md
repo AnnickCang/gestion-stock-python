@@ -15,6 +15,7 @@ GestionDeStock/
 |- interface.py
 |- types_structure.py
 |- normalisation.py
+|- suggestions_produits.py
 |- README.md
 |- .gitignore
 ```
@@ -41,11 +42,11 @@ Les données sont stockées sous forme d'une liste de dictionnaires :
 ## Fonctionnalités
 - Affichage du stock
 - Affichage des alertes (uniquement des produits dont la quantité est inférieure au seuil)
-- Ajout / Modification (avec une taille limite pour le nom du produit)
-- Suppression (avec demande de confirmation)
-- Recherche (insensible à la casse)
-- Renommage (avec vérification que le nouveau nom n'existe pas déjà dans la liste des produits)
-- Affichage de l'inventaire (avec calcul du coût total du stock à la date du jour)
+- Ajout / Modification avec une taille limite pour le nom du produit
+- Suppression avec demande de confirmation
+- Recherche insensible à la casse et aux accents avec proposition de suggestions
+- Renommage avec vérification que le nouveau nom n'existe pas déjà dans la liste des produits
+- Affichage de l'inventaire avec calcul du coût total du stock à la date du jour
 
 - Tous les affichages (stock, alertes, inventaire) sont triés par ordre alphabétique avec une normalisation Unicode
 

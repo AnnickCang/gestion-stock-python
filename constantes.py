@@ -156,3 +156,10 @@ ANO_CHAMP_NUM_CONV_ZERO = (
 ANO_CHAMP_NUM_INEXISTANT = (
     "Le champ '{0}' n'existe pas et a été créé avec une valeur à 0"
 )
+
+#Suggestions de recherche
+RECH_NB_ELEMENTS_RETOUR = 5
+RECH_SEUIL_SIMILARITE = 0.5 # de 0.0 (très permissif) à 1.0 (strictement identique)
+RECH_SUGGESTIONS = "Ce produit est introuvable. Suggestions possibles :"
+RECH_NOM_SUGGERE = "- {0}"
+RECH_STOCK_VIDE = "Le stock est vide : recherche impossible"

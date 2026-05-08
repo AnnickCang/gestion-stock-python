@@ -4,6 +4,7 @@ import constantes as const
 import interface as ifc
 import gestion_stock as gs
 import donnees
+import suggestions_produits as sp
 
 def main():
     code_err, stock, anomalies_fichier = donnees.charger_stock()
@@ -70,12 +71,24 @@ def main():
                         const.TITRE_SMENU_RECHERCHE, 
                         True
                     )
-                    nom_prod = ifc.demander_nom_produit(const.LBL_NOM_PRODUIT)
-                    if nom_prod:
-                        prod = gs.trouver_produit(stock, nom_prod)
-                        ifc.afficher_info_produit(prod)
-                    else:
+
+                    if not stock:
+                        ifc.afficher_recherche_impossible()
                         break
+
+                    nom_recherche = ifc.demander_nom_produit(const.LBL_NOM_PRODUIT)
+                    if nom_recherche is None:
+                        break
+                    
+                    prod = gs.trouver_produit(stock, nom_recherche)
+                    if prod is None:
+                        suggestions = sp.suggerer_produits(stock, nom_recherche)
+                        if suggestions:
+                            ifc.afficher_suggestions(suggestions)
+                        else:
+                            ifc.afficher_produit_non_trouve()
+                    else:
+                        ifc.afficher_info_produit(prod)
             case const.MENUP_CHOIX_RENOMMAGE:
                 while True:
                     ifc.afficher_titre_sous_menu(
