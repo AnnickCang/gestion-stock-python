@@ -7,6 +7,9 @@ from gestion_stock import trouver_produit
 def _afficher_separateur()-> None:
     print()
 
+def _attendre_entree_utilisateur()-> None:
+    input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
+
 def effacer_ecran_terminal()-> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -180,16 +183,13 @@ def afficher_titre_sous_menu(titre: str,
     if msg_retour:
         print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
 
-def afficher_info_produit(prod: types_structure.Produit | None)-> None:
+def afficher_info_produit(prod: types_structure.Produit)-> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
-    if prod is None:
-        print(const.INFO_PROD_NON_TROUVE)
-    else:
-        print(const.INFO_PRODUIT.format(prod[const.CLE_NOM],
-                                        prod[const.CLE_QUANTITE],
-                                        prod[const.CLE_SEUIL],
-                                        prod[const.CLE_PRIX])
-        )
+    print(const.INFO_PRODUIT.format(prod[const.CLE_NOM],
+                                    prod[const.CLE_QUANTITE],
+                                    prod[const.CLE_SEUIL],
+                                    prod[const.CLE_PRIX])
+    )
     _afficher_separateur()
         
 def afficher_inventaire(stock: list[types_structure.Produit])-> None:
@@ -276,3 +276,14 @@ def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str)-> None:
 
 def afficher_produit_existe(nom: str)-> None:
     print(const.CTRL_NOM_EXISTE_DEJA.format(nom))
+
+def afficher_suggestions(suggestions: list[str])-> None:
+    """Affiche une liste de suggestions pour la recherche d'un produit"""
+    print(const.RECH_SUGGESTIONS)
+    for suggestion in suggestions:
+        print(const.RECH_NOM_SUGGERE.format(suggestion))
+    _afficher_separateur()
+
+def afficher_recherche_impossible()-> None:
+    print(const.RECH_STOCK_VIDE)
+    _attendre_entree_utilisateur()
