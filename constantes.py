@@ -123,6 +123,10 @@ INFO_PROD_NON_TROUVE = "\nProduit introuvable"
 INFO_PROD_SUPPRIME = "\nLe produit '{0}' a été supprimé"
 INFO_AUCUNE_ALERTE = "\nStock OK, rien à recharger"
 INFO_PROD_RENOMME = "\nLe produit '{0}' a été renommé en '{1}'"
+INFO_RECHERCHE_STOCK_VIDE = "Le stock est vide : recherche impossible"
+INFO_SUPPRESION_STOCK_VIDE = "Le stock est vide : suppression impossible"
+INFO_RENOMMAGE_STOCK_VIDE = "Le stock est vide : renommage impossible"
+
 
 #Gestion des anomalies dans le fichier de données
 ANO_ENTIER = "int"
@@ -162,4 +166,3 @@ RECH_NB_ELEMENTS_RETOUR = 5
 RECH_SEUIL_SIMILARITE = 0.5 # de 0.0 (très permissif) à 1.0 (strictement identique)
 RECH_SUGGESTIONS = "Ce produit est introuvable. Suggestions possibles :"
 RECH_NOM_SUGGERE = "- {0}"
-RECH_STOCK_VIDE = "Le stock est vide : recherche impossible"
