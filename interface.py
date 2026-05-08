@@ -10,6 +10,12 @@ def _afficher_separateur()-> None:
 def _attendre_entree_utilisateur()-> None:
     input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
 
+def _attendre_entree_retour_menu()-> None:
+    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+
+def _afficher_stock_vide()-> None:
+    print(const.INFO_STOCK_VIDE)
+
 def effacer_ecran_terminal()-> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -143,7 +149,7 @@ def afficher_stock(stock: list[types_structure.Produit])-> None:
     """Affiche le stock actuel avec quantités et seuils"""
     
     if not stock:
-        print(const.INFO_STOCK_VIDE)
+        _afficher_stock_vide()
     else:
         afficher_noms_colonnes()
         for prod in stock:
@@ -153,7 +159,7 @@ def afficher_stock(stock: list[types_structure.Produit])-> None:
             )
         print(const.TIRET_CADRE * const.LARGEUR_CADRE)
     
-    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+    _attendre_entree_retour_menu()
 
 def afficher_alertes(alertes: list[types_structure.Produit])-> None:
     """Affiche la liste des noms de produits en dessous du seuil"""
@@ -169,7 +175,7 @@ def afficher_alertes(alertes: list[types_structure.Produit])-> None:
             )
         print(const.TIRET_CADRE * const.LARGEUR_CADRE)
     
-    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+    _attendre_entree_retour_menu()
 
 def afficher_titre_sous_menu(titre: str, 
                              msg_retour: bool = False, 
@@ -198,7 +204,7 @@ def afficher_inventaire(stock: list[types_structure.Produit])-> None:
     à la date du jour"""
 
     if not stock:
-        print(const.INFO_STOCK_VIDE)
+        _afficher_stock_vide()
     else :
         afficher_noms_colonnes(True)
         total_stock = 0.0
@@ -214,7 +220,7 @@ def afficher_inventaire(stock: list[types_structure.Produit])-> None:
         texte_total_stock = const.INFO_COUT_STOCK.format(total_stock)
         print(f"\n{texte_total_stock:>{const.LARGEUR_CADRE_INVENTAIRE}}")
 
-    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+    _attendre_entree_retour_menu()
 
 def afficher_erreur(code_err: int)-> None:
     match code_err:
@@ -224,7 +230,7 @@ def afficher_erreur(code_err: int)-> None:
             print(const.ERR_MSG_FICHIER_STOCK_ENDOMMAGE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
-    input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
+    _attendre_entree_utilisateur()
 
 def afficher_anomalies_fichier(anomalies: list[str])-> None:
     print(const.ANO_LISTE)
@@ -232,7 +238,7 @@ def afficher_anomalies_fichier(anomalies: list[str])-> None:
         print(anomalie)
     print(const.ANO_MSG_NOUVEAU_FICHIER_STOCK)
     print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
-    input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
+    _attendre_entree_utilisateur()
 
 def demander_choix_menu()-> str:
     """Affiche le menu principal et renvoie le choix de l'utilisateur"""
@@ -286,4 +292,4 @@ def afficher_suggestions(suggestions: list[str])-> None:
 
 def afficher_recherche_impossible()-> None:
     print(const.RECH_STOCK_VIDE)
-    _attendre_entree_utilisateur()
+    _attendre_entree_retour_menu()
