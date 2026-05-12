@@ -15,6 +15,15 @@ RETOUR_MODIFICATION = 2
 NO_ERR = 0
 ERR_FILE_NOT_FOUND = 1
 ERR_JSON_DECODE_ERROR = 2
+ERR_STOCK_PAS_UNE_LISTE = 3
+ERR_MSG_FICHIER_MAUVAISE_STRUCTURE =(
+    "\nLa structure du fichier de données '{0}' n'est pas adaptée.".format(
+        FICHIER_STOCK
+    )
+)
+ERR_MSG_FICHIER_STRUCTURE_LISTE_OBLIGATOIRE = (
+    "Les données attendues doivent être une liste de produits."
+)
 ERR_MSG_FICHIER_STOCK_ABSENT = (
     "\nLe fichier stock.json n'existe pas. Il sera créé à l'ajout du "
     "premier produit."
@@ -160,6 +169,7 @@ ANO_CHAMP_NUM_CONV_ZERO = (
 ANO_CHAMP_NUM_INEXISTANT = (
     "Le champ '{0}' n'existe pas et a été créé avec une valeur à 0"
 )
+ANO_PRODUIT_STRUCTURE_INVALIDE = "Produit invalide, le produit sera ignoré"
 
 #Suggestions de recherche
 RECH_NB_ELEMENTS_RETOUR = 5
