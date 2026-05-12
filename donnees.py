@@ -8,6 +8,13 @@ def trier_stock(stock: list[types_structure.Produit])-> None:
     """Trie le stock par nom de produit"""
     stock.sort(key=lambda item: norm(item[const.CLE_NOM]))
 
+def _verifier_structure_stock(stock: object)-> int:
+    """Renvoie un code ERR pour valider ou non la structure"""
+    if not isinstance(stock, list):
+        return const.ERR_STOCK_PAS_UNE_LISTE
+    
+    return const.NO_ERR
+
 def verifier_champ_numerique(prod: types_structure.Produit,
                              champ: str,
                              type_numerique: str
@@ -60,13 +67,17 @@ def verifier_champ_numerique(prod: types_structure.Produit,
 
     return valeur, msg
 
-def verifier_et_nettoyer_produit(prod: types_structure.Produit
+def verifier_et_nettoyer_produit(prod: object
 )-> tuple[types_structure.Produit | None, list[str]]:
     """Vérifie et retourne un produit avec des clés et valeurs valides ou None
     avec la liste de warnings associés"""
     
     prod_nettoye = None
     anomalies_produit = []
+
+    if not isinstance(prod, dict):
+        anomalies_produit.append(const.ANO_PRODUIT_STRUCTURE_INVALIDE)
+        return None, anomalies_produit
 
     #Vérification du nom
     if const.CLE_NOM not in prod:
@@ -115,6 +126,11 @@ def charger_stock(
     try:
         with open(const.FICHIER_STOCK, "r", encoding="utf-8") as f:
             stock = json.load(f)
+
+            if _verifier_structure_stock(
+                stock) == const.ERR_STOCK_PAS_UNE_LISTE:
+                return const.ERR_STOCK_PAS_UNE_LISTE, [], []
+
             stock_nettoye = []
             anomalies = []
             cles_noms_deja_vus = set()
@@ -122,6 +138,7 @@ def charger_stock(
             for prod in stock:
                 no_prod += 1
                 prod_nettoye, msgs_anomalies = verifier_et_nettoyer_produit(prod)
+                
                 if prod_nettoye is not None:
                     nom_normalise = norm(prod_nettoye[const.CLE_NOM])
                     if nom_normalise in cles_noms_deja_vus:
@@ -131,6 +148,7 @@ def charger_stock(
                     else:
                         cles_noms_deja_vus.add(nom_normalise)
                         stock_nettoye.append(prod_nettoye)
+                
                 for ano in msgs_anomalies:
                     txt_anomalie = const.ANO_NO_PRODUIT.format(no_prod)
                     anomalies.append(txt_anomalie + ano)

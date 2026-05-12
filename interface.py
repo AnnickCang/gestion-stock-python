@@ -232,6 +232,11 @@ def afficher_erreur(code_err: int)-> None:
             print(const.ERR_MSG_FICHIER_STOCK_ENDOMMAGE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
+        case const.ERR_STOCK_PAS_UNE_LISTE:
+            print(const.ERR_MSG_FICHIER_MAUVAISE_STRUCTURE)
+            print(const.ERR_MSG_FICHIER_STRUCTURE_LISTE_OBLIGATOIRE)
+            print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
+            print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
     _attendre_entree_utilisateur()
 
 def afficher_anomalies_fichier(anomalies: list[str])-> None:
