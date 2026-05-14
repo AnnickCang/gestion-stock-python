@@ -4,162 +4,265 @@ import types_structure
 import constantes as const
 from normalisation import normaliser_chaine_pour_comparaison as norm
 
-def trier_stock(stock: list[types_structure.Produit])-> None:
-    """Trie le stock par nom de produit"""
-    stock.sort(key=lambda item: norm(item[const.CLE_NOM]))
+CLE_NOM = const.CLE_NOM
+CLE_QUANTITE = const.CLE_QUANTITE
+CLE_SEUIL = const.CLE_SEUIL
+CLE_PRIX = const.CLE_PRIX
 
-def _verifier_structure_stock(stock: object)-> int:
-    """Renvoie un code ERR pour valider ou non la structure"""
+def trier_stock(stock: list[types_structure.Produit]) -> None:
+    """Trie le stock par nom de produit"""
+    stock.sort(key=lambda item: norm(item[CLE_NOM]))
+
+def _verifier_structure_stock(stock: object) -> int:
+    """Renvoie un code indiquant si la structure est valide ou pas"""
     if not isinstance(stock, list):
         return const.ERR_STOCK_PAS_UNE_LISTE
     
     return const.NO_ERR
 
-def verifier_champ_numerique(prod: types_structure.Produit,
-                             champ: str,
-                             type_numerique: str
-)-> tuple[int | float, str]:
-    """Vérifie et renvoie une valeur correcte (nombre positif ou 0)
-    pour un champ numérique avec éventuellement un warning"""
-    match type_numerique:
-        case const.ANO_ENTIER:
-            valeur_defaut = 0
-        case const.ANO_FLOTTANT:
-            valeur_defaut = 0.0
-    valeur = valeur_defaut
-    msg = ""
+def _verifier_champ_entier(
+    produit: dict[str, object],
+    champ: str
+) -> tuple[int, str]:
+    """Vérifie et renvoie un entier >= 0 avec éventuellement un warning"""
 
-    if champ in prod:
-        if isinstance(prod[champ], int | float):
-            if isinstance(prod[champ], bool) or prod[champ] < 0:
-                msg = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
-            elif type_numerique == const.ANO_FLOTTANT and isinstance(
-                prod[champ], int):
-                valeur = float(prod[champ])
-                msg = const.ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT.format(
-                    champ, const.ANO_FLOTTANT)
-            elif type_numerique == const.ANO_ENTIER and isinstance(
-                prod[champ], float):
-                valeur = int(prod[champ])
-                msg = const.ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT.format(
-                    champ, const.ANO_ENTIER)
-            else:
-                valeur = prod[champ]
-        else:
-            if isinstance(prod[champ], str):
-                try:
-                    valeur_temp = float(prod[champ])
-                    if type_numerique == const.ANO_ENTIER:
-                        valeur_temp = int(valeur_temp)
+    entier_valide = 0
 
-                    if valeur_temp < 0:
-                        msg = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
-                    else:
-                        valeur = valeur_temp
-                        msg = const.ANO_CHAMP_NUM_CONV_VAL.format(champ, valeur)
+    msg_champ_inexistant = const.ANO_CHAMP_NUM_INEXISTANT.format(champ)
+    msg_converti_a_zero = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
+    msg_converti_en_entier = const.ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT.format(
+        champ,
+        const.ANO_ENTIER
+    )
 
-                except ValueError:
-                    msg = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
-            else:
-                msg = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
-    else:
-        msg = const.ANO_CHAMP_NUM_INEXISTANT.format(champ)
+    if champ not in produit:
+        return entier_valide, msg_champ_inexistant
+    
+    valeur_champ = produit[champ]
 
-    return valeur, msg
+    if isinstance(valeur_champ, int):
+        if isinstance(valeur_champ, bool) or valeur_champ < 0:
+            return entier_valide, msg_converti_a_zero
+        
+        valeur = valeur_champ
+        return valeur, ""
+    
+    if isinstance(valeur_champ, float):
+        if valeur_champ < 0:
+            return entier_valide, msg_converti_a_zero
+        
+        entier_valide = int(valeur_champ)
+        return entier_valide, msg_converti_en_entier
+    
+    if isinstance(valeur_champ, str):
+        try:
+            valeur_convertie = float(valeur_champ)
+            valeur_convertie = int(valeur_convertie)
 
-def verifier_et_nettoyer_produit(prod: object
-)-> tuple[types_structure.Produit | None, list[str]]:
+            if valeur_convertie < 0:
+                return entier_valide, msg_converti_a_zero
+
+            entier_valide = valeur_convertie
+            msg_converti_en_nombre = const.ANO_CHAMP_NUM_CONV_VAL.format(
+                champ,
+                entier_valide
+            )
+            return entier_valide, msg_converti_en_nombre
+
+        except ValueError:
+            return entier_valide, msg_converti_a_zero
+
+    return entier_valide, msg_converti_a_zero
+
+def _verifier_champ_flottant(
+    produit: dict[str, object],
+    champ: str
+) -> tuple[float, str]:
+    """Vérifie et renvoie un flottant >= 0 avec éventuellement un warning"""
+
+    flottant_valide = 0.0
+
+    msg_champ_inexistant = const.ANO_CHAMP_NUM_INEXISTANT.format(champ)
+    msg_converti_a_zero = const.ANO_CHAMP_NUM_CONV_ZERO.format(champ)
+    msg_converti_en_flottant = const.ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT.format(
+        champ,
+        const.ANO_FLOTTANT
+    )
+
+    if champ not in produit:
+        return flottant_valide, msg_champ_inexistant
+    
+    valeur_champ = produit[champ]
+
+    if isinstance(valeur_champ, float):
+        if valeur_champ < 0:
+            return flottant_valide, msg_converti_a_zero
+        
+        flottant_valide = valeur_champ
+        return flottant_valide, ""
+    
+    if isinstance(valeur_champ, int):
+        if isinstance(valeur_champ, bool) or valeur_champ < 0:
+            return flottant_valide, msg_converti_a_zero
+        
+        flottant_valide = float(valeur_champ)
+        return flottant_valide, msg_converti_en_flottant
+    
+    if isinstance(valeur_champ, str):
+        try:
+            valeur_convertie = float(valeur_champ)
+
+            if valeur_convertie < 0:
+                return flottant_valide, msg_converti_a_zero
+
+            flottant_valide = valeur_convertie
+            msg_converti_en_nombre = const.ANO_CHAMP_NUM_CONV_VAL.format(
+                champ,
+                flottant_valide
+            )
+            return flottant_valide, msg_converti_en_nombre
+
+        except ValueError:
+            return flottant_valide, msg_converti_a_zero
+    
+    return flottant_valide, msg_converti_a_zero
+
+def _verifier_et_nettoyer_nom_produit(
+    produit: dict[str, object]
+) -> tuple[str | None, list[str]]:
+    """Vérifie et renvoie un nom valide ou None avec la liste des warnings associés"""
+    
+    largeur_colonne = const.LARGEUR_COL
+
+    anomalies_nom = []
+    
+    if CLE_NOM not in produit:
+        anomalies_nom.append(const.ANO_NOM_INEXISTANT)
+        return None, anomalies_nom
+    
+    nom = produit[CLE_NOM]
+    if not isinstance(nom, str):
+        anomalies_nom.append(const.ANO_CHAMP_PAS_STR.format(CLE_NOM))
+        return None, anomalies_nom
+    
+    nom_strip = nom.strip()
+    if nom_strip == "":
+        anomalies_nom.append(const.ANO_CHAMP_VIDE.format(CLE_NOM))
+        return None, anomalies_nom
+        
+    if len(nom_strip) > largeur_colonne:
+        nom_strip = nom_strip[:largeur_colonne]
+        anomalies_nom.append(
+            const.ANO_CHAMP_TROP_LONG.format(CLE_NOM, largeur_colonne)
+        )
+    
+    return nom_strip, anomalies_nom
+
+def _verifier_et_nettoyer_champs_numeriques(
+    produit: dict[str, object]
+) -> tuple[types_structure.ChampsNumeriquesProduit, list[str]]:
+    """Vérifie et renvoie les champs numériques avec une valeur valide ou 0
+    et la liste des warnings associés"""
+    
+    champs_numeriques_anomalies = []
+
+    quantite, msg_anomalie = _verifier_champ_entier(produit, CLE_QUANTITE)
+    if msg_anomalie != "":
+        champs_numeriques_anomalies.append(msg_anomalie)
+    seuil, msg_anomalie = _verifier_champ_entier(produit, CLE_SEUIL)
+    if msg_anomalie != "":
+        champs_numeriques_anomalies.append(msg_anomalie)
+    prix, msg_anomalie = _verifier_champ_flottant(produit, CLE_PRIX)
+    if msg_anomalie != "":
+        champs_numeriques_anomalies.append(msg_anomalie)
+
+    champs_numeriques_produit: types_structure.ChampsNumeriquesProduit = {
+        CLE_QUANTITE: quantite,
+        CLE_SEUIL: seuil,
+        CLE_PRIX: prix
+    }
+    return champs_numeriques_produit, champs_numeriques_anomalies
+
+def _verifier_et_nettoyer_produit(
+    produit: object
+) -> tuple[types_structure.Produit | None, list[str]]:
     """Vérifie et retourne un produit avec des clés et valeurs valides ou None
-    avec la liste de warnings associés"""
+    et la liste de warnings associés"""
     
-    prod_nettoye = None
-    anomalies_produit = []
+    produit_anomalies = []
 
-    if not isinstance(prod, dict):
-        anomalies_produit.append(const.ANO_PRODUIT_STRUCTURE_INVALIDE)
-        return None, anomalies_produit
-
-    #Vérification du nom
-    if const.CLE_NOM not in prod:
-        anomalies_produit.append(const.ANO_NOM_INEXISTANT)
-    elif not isinstance(prod[const.CLE_NOM], str):
-        anomalies_produit.append(const.ANO_CHAMP_PAS_STR.format(const.CLE_NOM))
-    else:
-        nom_strip = prod[const.CLE_NOM].strip()
-        if nom_strip == "":
-            anomalies_produit.append(
-                const.ANO_CHAMP_VIDE.format(const.CLE_NOM))
-        else:
-            if len(nom_strip) > const.LARGEUR_COL:
-                nom_strip = nom_strip[:const.LARGEUR_COL]
-                anomalies_produit.append(const.ANO_CHAMP_TROP_LONG.format(
-                    const.CLE_NOM, const.LARGEUR_COL))
-
-            #Nom validé - Vérification des champs numériques
-            quantite, msg_ano = verifier_champ_numerique(
-                prod, const.CLE_QUANTITE, const.ANO_ENTIER)
-            if msg_ano != "":
-                anomalies_produit.append(msg_ano)
-            seuil, msg_ano = verifier_champ_numerique(
-                prod, const.CLE_SEUIL, const.ANO_ENTIER)
-            if msg_ano != "":
-                anomalies_produit.append(msg_ano)
-            prix, msg_ano = verifier_champ_numerique(
-                prod, const.CLE_PRIX, const.ANO_FLOTTANT)
-            if msg_ano != "":
-                anomalies_produit.append(msg_ano)
-
-            #Produit validé
-            prod_nettoye = {
-                const.CLE_NOM: nom_strip,
-                const.CLE_QUANTITE: quantite,
-                const.CLE_SEUIL: seuil,
-                const.CLE_PRIX: prix
-            }
+    if not isinstance(produit, dict):
+        produit_anomalies.append(const.ANO_PRODUIT_STRUCTURE_INVALIDE)
+        return None, produit_anomalies
+     
+    produit_dict: dict[str, object] = produit
+    nom_nettoye, nom_anomalies = _verifier_et_nettoyer_nom_produit(produit_dict)
+    produit_anomalies.extend(nom_anomalies)
+    if nom_nettoye is None:
+        return None, produit_anomalies
     
-    return prod_nettoye, anomalies_produit
+    numeriques_valides, anomalies_numeriques = _verifier_et_nettoyer_champs_numeriques(produit_dict)
+    produit_anomalies.extend(anomalies_numeriques)
+    
+    produit_nettoye: types_structure.Produit = {
+        CLE_NOM: nom_nettoye,
+        CLE_QUANTITE: numeriques_valides[CLE_QUANTITE],
+        CLE_SEUIL: numeriques_valides[CLE_SEUIL],
+        CLE_PRIX: numeriques_valides[CLE_PRIX]
+    }
+    return produit_nettoye, produit_anomalies
 
-def charger_stock(
-)-> tuple[int, list[types_structure.Produit], list[str]]:
+def _verifier_contenu_stock(
+    stock: list[object]
+) -> tuple[list[types_structure.Produit], list[str]]:
+    """Renvoie un stock avec des produits vérifiés, nettoyés et sans doublons
+    et éventuellement les anomalies associées"""
+
+    stock_nettoye: list[types_structure.Produit] = []
+    anomalies: list[str] = []
+    cles_noms_deja_vus: set[str] = set()
+
+    for no_produit, produit in enumerate(stock, start=1):
+        produit_nettoye, msgs_anomalies = _verifier_et_nettoyer_produit(produit)
+        
+        if produit_nettoye is not None:
+            nom_normalise = norm(produit_nettoye[CLE_NOM])
+            if nom_normalise in cles_noms_deja_vus:
+                msg_anomalie = const.ANO_NOM_DOUBLON.format(produit_nettoye[CLE_NOM])
+                msgs_anomalies.append(msg_anomalie)
+            else:
+                cles_noms_deja_vus.add(nom_normalise)
+                stock_nettoye.append(produit_nettoye)
+        
+        for anomalie in msgs_anomalies:
+            txt_anomalie = const.ANO_NO_PRODUIT.format(no_produit)
+            anomalies.append(txt_anomalie + anomalie)
+    
+    return stock_nettoye, anomalies
+
+def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
     """Charge les données du fichier de stock et renvoie le code erreur ou pas d'erreur,
     la liste des produits valides et la liste des anomalies"""
     try:
         with open(const.FICHIER_STOCK, "r", encoding="utf-8") as f:
             stock = json.load(f)
 
-            if _verifier_structure_stock(
-                stock) == const.ERR_STOCK_PAS_UNE_LISTE:
+            if _verifier_structure_stock(stock) == const.ERR_STOCK_PAS_UNE_LISTE:
                 return const.ERR_STOCK_PAS_UNE_LISTE, [], []
 
-            stock_nettoye = []
-            anomalies = []
-            cles_noms_deja_vus = set()
-            no_prod = 0
-            for prod in stock:
-                no_prod += 1
-                prod_nettoye, msgs_anomalies = verifier_et_nettoyer_produit(prod)
-                
-                if prod_nettoye is not None:
-                    nom_normalise = norm(prod_nettoye[const.CLE_NOM])
-                    if nom_normalise in cles_noms_deja_vus:
-                        msgs_anomalies.append(const.ANO_NOM_DOUBLON.format(
-                            prod_nettoye[const.CLE_NOM])
-                        )
-                    else:
-                        cles_noms_deja_vus.add(nom_normalise)
-                        stock_nettoye.append(prod_nettoye)
-                
-                for ano in msgs_anomalies:
-                    txt_anomalie = const.ANO_NO_PRODUIT.format(no_prod)
-                    anomalies.append(txt_anomalie + ano)
+            stock_nettoye, anomalies = _verifier_contenu_stock(stock)
+
             trier_stock(stock_nettoye)
+
             return const.NO_ERR, stock_nettoye, anomalies
+        
     except FileNotFoundError:
         return const.ERR_FILE_NOT_FOUND, [], []
     except json.JSONDecodeError:
         return const.ERR_JSON_DECODE_ERROR, [], []
     
-def sauvegarder_stock(stock: list[types_structure.Produit])-> None:
+def sauvegarder_stock(stock: list[types_structure.Produit]) -> None:
+    """Sauvegarde le stock trié par nom"""
     trier_stock(stock)
     with open(const.FICHIER_STOCK, "w", encoding="utf-8") as f:
         json.dump(stock, f, indent=4, ensure_ascii=False)
