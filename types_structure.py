@@ -5,3 +5,8 @@ class Produit(TypedDict):
     quantite: int
     seuil: int
     prix: float
+
+class ChampsNumeriquesProduit(TypedDict):
+    quantite: int
+    seuil: int
+    prix: float
