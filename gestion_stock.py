@@ -3,84 +3,106 @@ import constantes as const
 from donnees import sauvegarder_stock
 from normalisation import normaliser_chaine_pour_comparaison as norm
 
-def trouver_produit(stock: list[types_structure.Produit], 
-                    nom: str
-)-> types_structure.Produit | None:
-    """Retourne le produit correspondant au nom donné 
-    ou None s'il n'existe pas"""
-    for prod in stock:
-        if norm(prod[const.CLE_NOM]) == norm(nom):
-            return prod
+
+CLE_NOM = const.CLE_NOM
+CLE_QUANTITE = const.CLE_QUANTITE
+CLE_SEUIL = const.CLE_SEUIL
+CLE_PRIX = const.CLE_PRIX
+
+
+def trouver_produit(
+    stock: list[types_structure.Produit], 
+    nom: str
+) -> types_structure.Produit | None:
+    """Retourne le produit correspondant au nom normalisé ou None"""
+    for produit in stock:
+        if norm(produit[CLE_NOM]) == norm(nom):
+            return produit
+        
     return None
 
-def ajouter_produit(stock: list[types_structure.Produit], 
-                    nom: str, 
-                    quantite: int, 
-                    seuil: int, 
-                    prix: float
-)-> None:
-    """Ajoute un produit au stock"""
-    prod = {
-        const.CLE_NOM: nom,
-        const.CLE_QUANTITE: quantite,
-        const.CLE_SEUIL: seuil,
-        const.CLE_PRIX: round(prix, 2)
+
+def _ajouter_produit(
+    stock: list[types_structure.Produit], 
+    nom: str, 
+    quantite: int, 
+    seuil: int, 
+    prix: float
+) -> None:
+    produit: types_structure.Produit = {
+        CLE_NOM: nom,
+        CLE_QUANTITE: quantite,
+        CLE_SEUIL: seuil,
+        CLE_PRIX: round(prix, 2)
     }
-    stock.append(prod)
+    stock.append(produit)
 
-def ajouter_ou_modifier_produit(stock: list[types_structure.Produit],
-                                nom: str, 
-                                quantite: int,
-                                seuil: int, 
-                                prix: float,
-)-> int:
-    """Ajoute un nouveau produit au stock ou modifie un produit existant"""
+
+def ajouter_ou_modifier_produit(
+    stock: list[types_structure.Produit],
+    nom: str, 
+    quantite: int,
+    seuil: int, 
+    prix: float,
+) -> int:
+    """Ajoute ou modifie un produit et renvoie le code correspondant"""
     
-    prod = trouver_produit(stock, nom)
-    if prod is None:
-        ajouter_produit(stock, nom, quantite, seuil, prix)
-        retour = const.RETOUR_AJOUT
-    else:
-        prod[const.CLE_QUANTITE] = quantite
-        prod[const.CLE_SEUIL] = seuil
-        prod[const.CLE_PRIX] = round(prix, 2)
-        retour = const.RETOUR_MODIFICATION
-    sauvegarder_stock(stock)
-    return retour
+    produit = trouver_produit(stock, nom)
 
-def trouver_alertes(stock: list[types_structure.Produit]
-)-> list[types_structure.Produit]:
+    if produit is None:
+        _ajouter_produit(stock, nom, quantite, seuil, prix)
+        sauvegarder_stock(stock)
+        return const.RETOUR_AJOUT
+
+    produit[CLE_QUANTITE] = quantite
+    produit[CLE_SEUIL] = seuil
+    produit[CLE_PRIX] = round(prix, 2)
+    sauvegarder_stock(stock)
+
+    return const.RETOUR_MODIFICATION
+
+
+def trouver_alertes(
+    stock: list[types_structure.Produit]
+) -> list[types_structure.Produit]:
     """Renvoie la liste des produits sous leur seuil d'alerte"""
-    alertes = []
-    for prod in stock:
-        if prod[const.CLE_QUANTITE] < prod[const.CLE_SEUIL]:
-            alertes.append(prod)
-    return alertes
+    return [
+        produit
+        for produit in stock
+        if produit[CLE_QUANTITE] < produit[CLE_SEUIL]
+    ]
 
-def supprimer_produit(stock: list[types_structure.Produit], 
-                      prod: types_structure.Produit
-)-> None:
-    stock.remove(prod)
+
+def supprimer_produit(
+    stock: list[types_structure.Produit], 
+    produit: types_structure.Produit
+) -> None:
+    stock.remove(produit)
     sauvegarder_stock(stock)
 
-def renommer_produit(stock: list[types_structure.Produit],
-                     prod: types_structure.Produit,
-                     nouveau_nom: str
-)-> None:
-    prod[const.CLE_NOM] = nouveau_nom
+
+def renommer_produit(
+    stock: list[types_structure.Produit],
+    produit: types_structure.Produit,
+    nouveau_nom: str
+) -> None:
+    produit[CLE_NOM] = nouveau_nom
     sauvegarder_stock(stock)
 
-def verifier_nom_disponible(stock: list[types_structure.Produit],
-                            ancien_nom: str,
-                            nouveau_nom: str
-)-> bool:
+
+def verifier_nom_disponible(
+    stock: list[types_structure.Produit],
+    ancien_nom: str,
+    nouveau_nom: str
+) -> bool:
     """Retourne True si le nom est disponible.
     Un nom normalisé identique à celui du produit courant est autorisé
     pour permettre la modification de la casse ou des accents."""
-    for prod in stock:
-        if norm(nouveau_nom) == norm(prod[const.CLE_NOM]):
-            if norm(ancien_nom) == norm(prod[const.CLE_NOM]):
-                continue
+
+    for produit in stock:
+        if norm(ancien_nom) == norm(produit[CLE_NOM]):
+            continue
+        if norm(nouveau_nom) == norm(produit[CLE_NOM]):
             return False
     
     return True

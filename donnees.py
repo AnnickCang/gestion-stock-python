@@ -4,14 +4,17 @@ import types_structure
 import constantes as const
 from normalisation import normaliser_chaine_pour_comparaison as norm
 
+
 CLE_NOM = const.CLE_NOM
 CLE_QUANTITE = const.CLE_QUANTITE
 CLE_SEUIL = const.CLE_SEUIL
 CLE_PRIX = const.CLE_PRIX
 
+
 def trier_stock(stock: list[types_structure.Produit]) -> None:
     """Trie le stock par nom de produit"""
     stock.sort(key=lambda item: norm(item[CLE_NOM]))
+
 
 def _verifier_structure_stock(stock: object) -> int:
     """Renvoie un code indiquant si la structure est valide ou pas"""
@@ -19,6 +22,7 @@ def _verifier_structure_stock(stock: object) -> int:
         return const.ERR_STOCK_PAS_UNE_LISTE
     
     return const.NO_ERR
+
 
 def _verifier_champ_entier(
     produit: dict[str, object],
@@ -74,6 +78,7 @@ def _verifier_champ_entier(
 
     return entier_valide, msg_converti_a_zero
 
+
 def _verifier_champ_flottant(
     produit: dict[str, object],
     champ: str
@@ -127,6 +132,7 @@ def _verifier_champ_flottant(
     
     return flottant_valide, msg_converti_a_zero
 
+
 def _verifier_et_nettoyer_nom_produit(
     produit: dict[str, object]
 ) -> tuple[str | None, list[str]]:
@@ -158,6 +164,7 @@ def _verifier_et_nettoyer_nom_produit(
     
     return nom_strip, anomalies_nom
 
+
 def _verifier_et_nettoyer_champs_numeriques(
     produit: dict[str, object]
 ) -> tuple[types_structure.ChampsNumeriquesProduit, list[str]]:
@@ -182,6 +189,7 @@ def _verifier_et_nettoyer_champs_numeriques(
         CLE_PRIX: prix
     }
     return champs_numeriques_produit, champs_numeriques_anomalies
+
 
 def _verifier_et_nettoyer_produit(
     produit: object
@@ -212,6 +220,7 @@ def _verifier_et_nettoyer_produit(
     }
     return produit_nettoye, produit_anomalies
 
+
 def _verifier_contenu_stock(
     stock: list[object]
 ) -> tuple[list[types_structure.Produit], list[str]]:
@@ -240,6 +249,7 @@ def _verifier_contenu_stock(
     
     return stock_nettoye, anomalies
 
+
 def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
     """Charge les données du fichier de stock et renvoie le code erreur ou pas d'erreur,
     la liste des produits valides et la liste des anomalies"""
@@ -260,6 +270,7 @@ def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
         return const.ERR_FILE_NOT_FOUND, [], []
     except json.JSONDecodeError:
         return const.ERR_JSON_DECODE_ERROR, [], []
+    
     
 def sauvegarder_stock(stock: list[types_structure.Produit]) -> None:
     """Sauvegarde le stock trié par nom"""
