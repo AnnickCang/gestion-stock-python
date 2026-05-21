@@ -23,19 +23,27 @@ def main():
         ifc.effacer_ecran_terminal()
         match choix.capitalize():
             case const.MENUP_CHOIX_STOCK:
-                ifc.afficher_titre_sous_menu(const.TITRE_SMENU_STOCK)
+                ifc.afficher_titre_sous_menu(
+                    const.TITRE_SMENU_STOCK,
+                    const.LARGEUR_CADRE
+                )
                 ifc.afficher_stock(stock)
 
             case const.MENUP_CHOIX_ALERTES:
                  ifc.afficher_titre_sous_menu(
-                     const.TITRE_SMENU_ALERTES)
+                    const.TITRE_SMENU_ALERTES,
+                    const.LARGEUR_CADRE
+                )
                  alertes = gs.trouver_alertes(stock)
                  ifc.afficher_alertes(alertes)
 
             case const.MENUP_CHOIX_AJOUT_MODIF:
                 while True:
                     ifc.afficher_titre_sous_menu(
-                        const.TITRE_SMENU_AJOUT_MODIF, True)
+                        const.TITRE_SMENU_AJOUT_MODIF,
+                        const.LARGEUR_CADRE
+                    )
+                    ifc.afficher_saisie_vide_retour_menu(const.LARGEUR_CADRE)
                     donnees_produit =  ifc.demander_info_produit(stock)
                     if donnees_produit is None:
                         break
@@ -51,8 +59,9 @@ def main():
                 while True:
                     ifc.afficher_titre_sous_menu(
                         const.TITRE_SMENU_SUPPRESSION, 
-                        True
+                        const.LARGEUR_CADRE
                     )
+                    ifc.afficher_saisie_vide_retour_menu(const.LARGEUR_CADRE)
 
                     if not stock:
                         ifc.afficher_suppression_impossible()
@@ -78,8 +87,9 @@ def main():
                 while True:
                     ifc.afficher_titre_sous_menu(
                         const.TITRE_SMENU_RECHERCHE, 
-                        True
+                        const.LARGEUR_CADRE
                     )
+                    ifc.afficher_saisie_vide_retour_menu(const.LARGEUR_CADRE)
 
                     if not stock:
                         ifc.afficher_recherche_impossible()
@@ -103,8 +113,9 @@ def main():
                 while True:
                     ifc.afficher_titre_sous_menu(
                         const.TITRE_SMENU_RENOMMAGE, 
-                        True
+                        const.LARGEUR_CADRE
                     )
+                    ifc.afficher_saisie_vide_retour_menu(const.LARGEUR_CADRE)
 
                     if not stock:
                         ifc.afficher_renommage_impossible()
@@ -141,7 +152,7 @@ def main():
             case const.MENUP_CHOIX_INVENTAIRE:
                 jour = datetime.today().strftime("%d/%m/%Y")
                 titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
-                ifc.afficher_titre_sous_menu(titre, pour_inventaire=True)
+                ifc.afficher_titre_sous_menu(titre, const.LARGEUR_CADRE_INVENTAIRE)
                 ifc.afficher_inventaire(stock)
 
             case const.MENUP_CHOIX_QUITTER:

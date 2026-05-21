@@ -4,108 +4,165 @@ import types_structure
 import constantes as const
 from gestion_stock import trouver_produit
 
-def _afficher_separateur()-> None:
+
+CLE_NOM = const.CLE_NOM
+CLE_QUANTITE = const.CLE_QUANTITE
+CLE_SEUIL = const.CLE_SEUIL
+CLE_PRIX = const.CLE_PRIX
+LARGEUR_COL = const.LARGEUR_COL
+LARGEUR_CADRE = const.LARGEUR_CADRE
+LARGEUR_CADRE_INVENTAIRE = const.LARGEUR_CADRE_INVENTAIRE
+TIRET_CADRE = const.TIRET_CADRE
+
+
+def _afficher_separateur() -> None:
     print()
 
-def _attendre_entree_utilisateur()-> None:
-    input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
 
-def _attendre_entree_retour_menu()-> None:
-    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+def _afficher_bordure_cadre(largeur_cadre: int) -> None:
+    print(TIRET_CADRE * largeur_cadre)
 
-def _afficher_stock_vide()-> None:
+
+def _afficher_stock_vide() -> None:
     print(const.INFO_STOCK_VIDE)
 
-def effacer_ecran_terminal()-> None:
-    os.system('cls' if os.name == 'nt' else 'clear')
 
-def demander_retour_menu()-> bool:
+def _attendre_entree_utilisateur() -> None:
+    input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
+
+
+def _attendre_entree_retour_menu() -> None:
+    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+
+
+def _afficher_nom_colonnes_stock_et_alertes() -> None:
+    _afficher_bordure_cadre(LARGEUR_CADRE)
+    print(f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
+          f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
+          f"| {const.COL_SEUIL:>{LARGEUR_COL}} |"
+    )
+    _afficher_bordure_cadre(LARGEUR_CADRE)
+
+
+def _afficher_nom_colonnes_inventaire() -> None:
+    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+    print(f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
+          f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
+          f"| {const.COL_PRIX:>{LARGEUR_COL}} "
+          f"| {const.COL_TOTAL:>{LARGEUR_COL}} |"
+    )
+    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+
+
+def _demander_retour_menu() -> bool:
     while True:
-        reponse = input(const.QST_RETOUR_MENU_PRINCIPAL).strip()
-        match reponse.capitalize():
+        entree_utilisateur = input(const.QST_RETOUR_MENU_PRINCIPAL).strip()
+        match entree_utilisateur.capitalize():
             case const.CTRL_REP_OUI:
                 return True
             case const.CTRL_REP_NON:
                 return False
         print(const.CTRL_REP_OUI_NON)
 
-def demander_nombre(message: str, nb_entier: bool)-> int | float | None:
-    """Renvoie l'entrée utilisateur après l'avoir convertie (entier ou float)
+
+def _demander_entier(message: str) -> int | None:
+    """Renvoie l'entrée utilisateur après l'avoir convertie en entier
     ou None (si champ vide avec validation retour au menu principal)"""
     while True:
-        reponse = input(message).strip()
-        if reponse == "":
-            if demander_retour_menu():
+        entree_utilisateur = input(message).strip()
+        if not entree_utilisateur: 
+            if _demander_retour_menu():
                 return None
             continue
 
         try:
-            if nb_entier:
-                valeur = int(reponse)
-                if valeur >= 0:
-                    return valeur
-                else:
-                    print(const.CTRL_NB_POSITIF)
-            else:
-                valeur = float(reponse)
-                if valeur >= 0:
-                    return valeur
-                else:
-                    print(const.CTRL_PRIX_VALIDE)
+            valeur = int(entree_utilisateur)
+            if valeur >= 0:
+                return valeur
+            print(const.CTRL_NB_POSITIF)
         except ValueError:
             print(const.CTRL_NB_VALIDE)
 
-def demander_info_produit(stock: list[types_structure.Produit]
-)-> types_structure.Produit | None:
+
+def _demander_flottant(message: str) -> float | None:
+    """Renvoie l'entrée utilisateur après l'avoir convertie en float
+    ou None (si champ vide avec validation retour au menu principal)"""
+    while True:
+        entree_utilisateur = input(message).strip()
+        if not entree_utilisateur:
+            if _demander_retour_menu():
+                return None
+            continue
+
+        try:
+            valeur = float(entree_utilisateur)
+            if valeur >= 0:
+                return valeur
+            print(const.CTRL_PRIX_VALIDE)
+        except ValueError:
+            print(const.CTRL_NB_VALIDE)
+
+
+def effacer_ecran_terminal() -> None:
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def demander_info_produit(
+    stock: list[types_structure.Produit]
+) -> types_structure.Produit | None:
     """Renvoie un dict Produit (valeurs saisies par l'utilisateur) 
     ou None si la saisie est annulée"""
 
     nom = demander_nom_produit(const.LBL_NOM_PRODUIT)
     if nom is None:
         return None
+    
+    produit = trouver_produit(stock, nom)
+    if produit is None:
+        print(const.INFO_PRODUIT_AJOUTE.format(nom))
     else:
-        prod = trouver_produit(stock, nom)
-        if prod is None:
-            print(const.INFO_PRODUIT_AJOUTE.format(nom))
-        else:
-            print(
-                const.INFO_VALEUR_ACTU,
-                const.INFO_PRODUIT.format(
-                    prod[const.CLE_NOM],
-                    prod[const.CLE_QUANTITE],
-                    prod[const.CLE_SEUIL],
-                    prod[const.CLE_PRIX]
-                ),
-                sep=''
-            )
+        infos_produit = const.INFO_PRODUIT.format(
+            produit[CLE_NOM],
+            produit[CLE_QUANTITE],
+            produit[CLE_SEUIL],
+            produit[CLE_PRIX]
+        )
+        print(const.INFO_VALEUR_ACTU, infos_produit, sep='')
 
-        quantite = demander_nombre(const.LBL_QUANTITE_PRODUIT, True)
-        if quantite is None:
-            return None
-        seuil = demander_nombre(const.LBL_SEUIL_PRODUIT, True)
-        if seuil is None:
-            return None
-        prix = demander_nombre(const.LBL_PRIX_PRODUIT, False)
-        if prix is None:
-            return None
-        return {
-            const.CLE_NOM: nom, 
-            const.CLE_QUANTITE: quantite, 
-            const.CLE_SEUIL: seuil, 
-            const.CLE_PRIX: prix
-        }
+    quantite = _demander_entier(const.LBL_QUANTITE_PRODUIT)
+    if quantite is None:
+        return None
+    
+    seuil = _demander_entier(const.LBL_SEUIL_PRODUIT)
+    if seuil is None:
+        return None
+    
+    prix = _demander_flottant(const.LBL_PRIX_PRODUIT)
+    if prix is None:
+        return None
+    
+    return {
+        CLE_NOM: nom, 
+        CLE_QUANTITE: quantite, 
+        CLE_SEUIL: seuil, 
+        CLE_PRIX: prix
+    }
 
-def demander_nom_produit(msg: str)-> str | None:
+
+def demander_nom_produit(message: str) -> str | None:
     while True:
-        nom: str = input(msg).strip()
-        if nom == "":
+        nom: str = input(message).strip()
+        if not nom:
             return None
-        elif len(nom) > const.LARGEUR_COL:
-            print(const.CTRL_NOM_TROP_LONG.format(const.LARGEUR_COL))
-        else:
-            return nom
+        
+        if len(nom) > LARGEUR_COL:
+            print(const.CTRL_NOM_TROP_LONG.format(LARGEUR_COL))
+            continue
+        
+        return nom
 
-def demander_nouveau_nom(ancien_nom: str)-> str | None:
+
+def demander_nouveau_nom(ancien_nom: str) -> str | None:
     nouveau_nom = demander_nom_produit(
         const.LBL_NOUVEAU_NOM_PRODUIT.format(ancien_nom)
     )
@@ -114,10 +171,12 @@ def demander_nouveau_nom(ancien_nom: str)-> str | None:
     
     return nouveau_nom
 
-def demander_confirmation_suppression(nom_prod: str)-> bool:
+
+def demander_confirmation_suppression(nom_produit: str) -> bool:
     while True:
-        reponse = input(const.QST_SUPPRESSION.format(nom_prod)).strip()
-        match reponse.capitalize():
+        question = const.QST_SUPPRESSION.format(nom_produit)
+        entree_utilisateur = input(question).strip()
+        match entree_utilisateur.capitalize():
             case const.CTRL_REP_OUI:
                 return True
             case const.CTRL_REP_NON:
@@ -127,104 +186,88 @@ def demander_confirmation_suppression(nom_prod: str)-> bool:
         print(const.CTRL_REP_OUI_NON)
         _afficher_separateur()
 
-def afficher_noms_colonnes(pour_inventaire: bool = False)-> None:
-    if not pour_inventaire:
-        largeur_cadre = const.LARGEUR_CADRE
-    else:
-        largeur_cadre = const.LARGEUR_CADRE_INVENTAIRE 
 
-    print(const.TIRET_CADRE * largeur_cadre)
-    if not pour_inventaire:
-        print(f"| {const.COL_PRODUIT:{const.LARGEUR_COL}} "
-              f"| {const.COL_QUANTITE:>{const.LARGEUR_COL}} "
-              f"| {const.COL_SEUIL:>{const.LARGEUR_COL}} |"
-        )
-    else:
-        print(f"| {const.COL_PRODUIT:{const.LARGEUR_COL}} "
-              f"| {const.COL_QUANTITE:>{const.LARGEUR_COL}} "
-              f"| {const.COL_PRIX:>{const.LARGEUR_COL}} "
-              f"| {const.COL_TOTAL:>{const.LARGEUR_COL}} |"
-        )
-    print(const.TIRET_CADRE * largeur_cadre)
-
-def afficher_stock(stock: list[types_structure.Produit])-> None:
+def afficher_stock(stock: list[types_structure.Produit]) -> None:
     """Affiche le stock actuel avec quantités et seuils"""
-    
     if not stock:
         _afficher_stock_vide()
-    else:
-        afficher_noms_colonnes()
-        for prod in stock:
-            print(f"| {prod[const.CLE_NOM]:{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_QUANTITE]:>{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_SEUIL]:>{const.LARGEUR_COL}} |"
-            )
-        print(const.TIRET_CADRE * const.LARGEUR_CADRE)
+        _attendre_entree_retour_menu()
+        return
     
+    _afficher_nom_colonnes_stock_et_alertes()
+    for produit in stock:
+        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
+              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
+              f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
+        )
+    _afficher_bordure_cadre(LARGEUR_CADRE)
     _attendre_entree_retour_menu()
 
-def afficher_alertes(alertes: list[types_structure.Produit])-> None:
-    """Affiche la liste des noms de produits en dessous du seuil"""
 
+def afficher_alertes(alertes: list[types_structure.Produit]) -> None:
+    """Affiche la liste des noms de produits en dessous du seuil"""
     if not alertes:
         print(const.INFO_AUCUNE_ALERTE)
-    else:
-        afficher_noms_colonnes()
-        for prod in alertes:
-            print(f"| {prod[const.CLE_NOM]:{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_QUANTITE]:>{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_SEUIL]:>{const.LARGEUR_COL}} |"
-            )
-        print(const.TIRET_CADRE * const.LARGEUR_CADRE)
+        _attendre_entree_retour_menu()
+        return
     
+    _afficher_nom_colonnes_stock_et_alertes()
+    for produit in alertes:
+        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
+              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
+              f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
+        )
+    _afficher_bordure_cadre(LARGEUR_CADRE)
     _attendre_entree_retour_menu()
 
-def afficher_titre_sous_menu(titre: str, 
-                             msg_retour: bool = False, 
-                             pour_inventaire: bool = False
-)-> None:
-    if not pour_inventaire:
-        largeur_cadre = const.LARGEUR_CADRE
-    else:
-        largeur_cadre = const.LARGEUR_CADRE_INVENTAIRE
-    print(f"{titre:^{largeur_cadre}}")
-    if msg_retour:
-        print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
 
-def afficher_info_produit(prod: types_structure.Produit)-> None:
+def afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
+    print(f"{titre:^{largeur_cadre}}")
+
+
+def afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
+    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
+
+
+def afficher_info_produit(produit: types_structure.Produit) -> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
-    print(const.INFO_PRODUIT.format(prod[const.CLE_NOM],
-                                    prod[const.CLE_QUANTITE],
-                                    prod[const.CLE_SEUIL],
-                                    prod[const.CLE_PRIX])
+    print(
+        const.INFO_PRODUIT.format(
+            produit[CLE_NOM],
+            produit[CLE_QUANTITE],
+            produit[CLE_SEUIL],
+            produit[CLE_PRIX])
     )
     _afficher_separateur()
         
-def afficher_inventaire(stock: list[types_structure.Produit])-> None:
+
+def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     """Affiche les données relatives à chaque produit ainsi que le montant
     total pour chaque produit et le montant de la totalité du stock
     à la date du jour"""
 
     if not stock:
         _afficher_stock_vide()
-    else :
-        afficher_noms_colonnes(True)
-        total_stock = 0.0
-        for prod in stock:
-            cout_total_prod = prod[const.CLE_QUANTITE] * prod[const.CLE_PRIX]
-            print(f"| {prod[const.CLE_NOM]:{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_QUANTITE]:>{const.LARGEUR_COL}} "
-                  f"| {prod[const.CLE_PRIX]:>{const.LARGEUR_COL}.2f} "
-                  f"| {cout_total_prod:>{const.LARGEUR_COL}.2f} |"
-            )
-            total_stock += cout_total_prod
-        print(const.TIRET_CADRE * const.LARGEUR_CADRE_INVENTAIRE)
-        texte_total_stock = const.INFO_COUT_STOCK.format(total_stock)
-        print(f"\n{texte_total_stock:>{const.LARGEUR_CADRE_INVENTAIRE}}")
-
+        _attendre_entree_retour_menu()
+        return
+    
+    _afficher_nom_colonnes_inventaire()
+    cout_total_stock = 0.0
+    for produit in stock:
+        cout_total_produit = produit[CLE_QUANTITE] * produit[CLE_PRIX]
+        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
+              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
+              f"| {produit[CLE_PRIX]:>{LARGEUR_COL}.2f} "
+              f"| {cout_total_produit:>{LARGEUR_COL}.2f} |"
+        )
+        cout_total_stock += cout_total_produit
+    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+    texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)
+    print(f"\n{texte_total_stock:>{LARGEUR_CADRE_INVENTAIRE}}")
     _attendre_entree_retour_menu()
 
-def afficher_erreur(code_err: int)-> None:
+
+def afficher_erreur(code_err: int) -> None:
     match code_err:
         case const.ERR_FILE_NOT_FOUND:
             print(const.ERR_MSG_FICHIER_STOCK_ABSENT)
@@ -239,7 +282,8 @@ def afficher_erreur(code_err: int)-> None:
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
     _attendre_entree_utilisateur()
 
-def afficher_anomalies_fichier(anomalies: list[str])-> None:
+
+def afficher_anomalies_fichier(anomalies: list[str]) -> None:
     print(const.ANO_LISTE)
     for anomalie in anomalies:
         print(anomalie)
@@ -247,10 +291,11 @@ def afficher_anomalies_fichier(anomalies: list[str])-> None:
     print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
     _attendre_entree_utilisateur()
 
-def demander_choix_menu()-> str:
+
+def demander_choix_menu() -> str:
     """Affiche le menu principal et renvoie le choix de l'utilisateur"""
 
-    print(f"{const.TITRE_MENU_PRINCIPAL:^{const.LARGEUR_CADRE}}\n")
+    print(f"{const.TITRE_MENU_PRINCIPAL:^{LARGEUR_CADRE}}\n")
     print(const.MENUP_SM_STOCK)
     print(const.MENUP_SM_ALERTES)
     print(const.MENUP_SM_AJOUT_MODIF)
@@ -261,50 +306,59 @@ def demander_choix_menu()-> str:
     print(const.MENUP_SM_QUITTER)
 
     choix = input(const.MENUP_CHOIX).strip()
-
     while choix not in const.LISTE_CHOIX:
-        choix = input(const.MENUP_REPETER_CHOIX)
+        choix = input(const.MENUP_REPETER_CHOIX).strip()
     
     return choix
 
-def afficher_produit_ajoute()-> None:
+
+def afficher_produit_ajoute() -> None:
     print(const.INFO_PROD_AJOUTE)
     _afficher_separateur()
 
-def afficher_produit_modifie()-> None:
+
+def afficher_produit_modifie() -> None:
     print(const.INFO_PROD_MODIFIE)
     _afficher_separateur()
 
-def afficher_produit_non_trouve()-> None:
+
+def afficher_produit_non_trouve() -> None:
     print(const.INFO_PROD_NON_TROUVE)
     _afficher_separateur()
 
-def afficher_produit_supprime(nom_prod: str)-> None:
-    print(const.INFO_PROD_SUPPRIME.format(nom_prod))
+
+def afficher_produit_supprime(nom_produit: str) -> None:
+    print(const.INFO_PROD_SUPPRIME.format(nom_produit))
     _afficher_separateur()
 
-def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str)-> None:
+
+def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str) -> None:
     print(const.INFO_PROD_RENOMME.format(ancien_nom, nouveau_nom))
     _afficher_separateur()
 
-def afficher_produit_existe(nom: str)-> None:
+
+def afficher_produit_existe(nom: str) -> None:
     print(const.CTRL_NOM_EXISTE_DEJA.format(nom))
 
-def afficher_suggestions(suggestions: list[str])-> None:
+
+def afficher_suggestions(suggestions: list[str]) -> None:
     """Affiche une liste de suggestions pour la recherche d'un produit"""
     print(const.RECH_SUGGESTIONS)
     for suggestion in suggestions:
         print(const.RECH_NOM_SUGGERE.format(suggestion))
     _afficher_separateur()
 
-def afficher_recherche_impossible()-> None:
+
+def afficher_recherche_impossible() -> None:
     print(const.INFO_RECHERCHE_STOCK_VIDE)
     _attendre_entree_retour_menu()
 
-def afficher_suppression_impossible()-> None:
+
+def afficher_suppression_impossible() -> None:
     print(const.INFO_SUPPRESSION_STOCK_VIDE)
     _attendre_entree_retour_menu()
 
-def afficher_renommage_impossible()-> None:
+
+def afficher_renommage_impossible() -> None:
     print(const.INFO_RENOMMAGE_STOCK_VIDE)
     _attendre_entree_retour_menu()
