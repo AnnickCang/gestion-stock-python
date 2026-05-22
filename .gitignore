@@ -4,6 +4,9 @@
 # Dossier éditeur
 .vscode/
 
+# Cache des outils de développement
+.ruff_cache/
+
 # Fichiers Python compilés
 __pycache__/
 *.pyc
