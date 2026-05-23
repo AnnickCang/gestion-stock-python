@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import types_structure
 import constantes as const
@@ -103,6 +104,14 @@ def _demander_flottant(message: str) -> float | None:
             print(const.CTRL_NB_VALIDE)
 
 
+def _afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
+    print(f"{titre:^{largeur_cadre}}")
+
+
+def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
+    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
+
+
 def effacer_ecran_terminal() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -112,7 +121,10 @@ def demander_info_produit(
 ) -> types_structure.Produit | None:
     """Renvoie un dict Produit (valeurs saisies par l'utilisateur) 
     ou None si la saisie est annulée"""
-
+    titre = const.TITRE_SMENU_AJOUT_MODIF
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+    
     nom = demander_nom_produit(const.LBL_NOM_PRODUIT)
     if nom is None:
         return None
@@ -189,6 +201,9 @@ def demander_confirmation_suppression(nom_produit: str) -> bool:
 
 def afficher_stock(stock: list[types_structure.Produit]) -> None:
     """Affiche le stock actuel avec quantités et seuils"""
+    titre = const.TITRE_SMENU_STOCK
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    
     if not stock:
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
@@ -206,6 +221,9 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
 
 def afficher_alertes(alertes: list[types_structure.Produit]) -> None:
     """Affiche la liste des noms de produits en dessous du seuil"""
+    titre = const.TITRE_SMENU_ALERTES
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    
     if not alertes:
         print(const.INFO_AUCUNE_ALERTE)
         _attendre_entree_retour_menu()
@@ -219,14 +237,6 @@ def afficher_alertes(alertes: list[types_structure.Produit]) -> None:
         )
     _afficher_bordure_cadre(LARGEUR_CADRE)
     _attendre_entree_retour_menu()
-
-
-def afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
-    print(f"{titre:^{largeur_cadre}}")
-
-
-def afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
-    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
 
 
 def afficher_info_produit(produit: types_structure.Produit) -> None:
@@ -245,7 +255,10 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     """Affiche les données relatives à chaque produit ainsi que le montant
     total pour chaque produit et le montant de la totalité du stock
     à la date du jour"""
-
+    jour = datetime.today().strftime("%d/%m/%Y")
+    titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+    
     if not stock:
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
@@ -362,3 +375,21 @@ def afficher_suppression_impossible() -> None:
 def afficher_renommage_impossible() -> None:
     print(const.INFO_RENOMMAGE_STOCK_VIDE)
     _attendre_entree_retour_menu()
+
+
+def afficher_entete_suppression() -> None:
+    titre = const.TITRE_SMENU_SUPPRESSION
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+
+
+def afficher_entete_recherche() -> None:
+    titre = const.TITRE_SMENU_RECHERCHE
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+
+
+def afficher_entete_renommage() -> None:
+    titre = const.TITRE_SMENU_RENOMMAGE
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)

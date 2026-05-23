@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import types_structure
 import constantes as const
 import interface as ifc
@@ -8,16 +6,12 @@ import donnees
 import suggestions_produits as sp
 
 
-LARGEUR_CADRE = const.LARGEUR_CADRE
 LBL_NOM_PRODUIT = const.LBL_NOM_PRODUIT
 CLE_NOM = const.CLE_NOM
 
 
 def _gerer_ajout_modification(stock: list[types_structure.Produit]) -> None:
     while True:
-        titre = const.TITRE_SMENU_AJOUT_MODIF
-        ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-        ifc.afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
         donnees_produit = ifc.demander_info_produit(stock)
         if donnees_produit is None:
             break
@@ -36,9 +30,7 @@ def _gerer_ajout_modification(stock: list[types_structure.Produit]) -> None:
 
 def _gerer_suppression(stock: list[types_structure.Produit]) -> None:
     while True:
-        titre = const.TITRE_SMENU_SUPPRESSION
-        ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-        ifc.afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+        ifc.afficher_entete_suppression()
 
         if not stock:
             ifc.afficher_suppression_impossible()
@@ -61,9 +53,7 @@ def _gerer_suppression(stock: list[types_structure.Produit]) -> None:
 
 def _gerer_recherche(stock: list[types_structure.Produit]) -> None:
     while True:
-        titre = const.TITRE_SMENU_RECHERCHE
-        ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-        ifc.afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+        ifc.afficher_entete_recherche()
 
         if not stock:
             ifc.afficher_recherche_impossible()
@@ -88,9 +78,7 @@ def _gerer_recherche(stock: list[types_structure.Produit]) -> None:
 
 def _gerer_renommage(stock: list[types_structure.Produit]) -> None:
     while True:
-        titre = const.TITRE_SMENU_RENOMMAGE
-        ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-        ifc.afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+        ifc.afficher_entete_renommage()
 
         if not stock:
             ifc.afficher_renommage_impossible()
@@ -143,13 +131,9 @@ def main():
         ifc.effacer_ecran_terminal()
         match choix_menu.capitalize():
             case const.MENUP_CHOIX_STOCK:
-                titre = const.TITRE_SMENU_STOCK
-                ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
                 ifc.afficher_stock(stock)
 
             case const.MENUP_CHOIX_ALERTES:
-                titre = const.TITRE_SMENU_ALERTES
-                ifc.afficher_titre_sous_menu(titre, LARGEUR_CADRE)
                 alertes = gs.trouver_alertes(stock)
                 ifc.afficher_alertes(alertes)
 
@@ -166,9 +150,6 @@ def main():
                 _gerer_renommage(stock)
 
             case const.MENUP_CHOIX_INVENTAIRE:
-                jour = datetime.today().strftime("%d/%m/%Y")
-                titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
-                ifc.afficher_titre_sous_menu(titre, const.LARGEUR_CADRE_INVENTAIRE)
                 ifc.afficher_inventaire(stock)
 
             case const.MENUP_CHOIX_QUITTER:
