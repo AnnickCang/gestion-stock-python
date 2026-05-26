@@ -12,19 +12,25 @@ CLE_NOM = const.CLE_NOM
 
 def _gerer_ajout_modification(stock: list[types_structure.Produit]) -> None:
     while True:
-        donnees_produit = ifc.demander_info_produit(stock)
-        if donnees_produit is None:
+        ifc.afficher_entete_ajout_modification()
+
+        nom_produit = ifc.demander_nom_produit(LBL_NOM_PRODUIT)
+        if nom_produit is None:
             break
         
-        action_effectuee = gs.ajouter_ou_modifier_produit(
-            stock,
-            **donnees_produit
-        )
-
-        if action_effectuee == const.RETOUR_AJOUT:
+        produit = gs.trouver_produit(stock, nom_produit)
+        if produit is None:
+            donnees_produit = ifc.demander_info_produit(None, nom_produit)
+            if donnees_produit is None:
+                break
+            gs.ajouter_produit(stock, nom_produit, **donnees_produit)
             ifc.afficher_produit_ajoute()
             continue
 
+        donnees_produit = ifc.demander_info_produit(produit)
+        if donnees_produit is None:
+            break
+        gs.modifier_produit(stock, produit, **donnees_produit)
         ifc.afficher_produit_modifie()
 
 
