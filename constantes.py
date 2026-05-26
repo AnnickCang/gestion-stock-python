@@ -7,10 +7,6 @@ CLE_QUANTITE = "quantite"
 CLE_SEUIL = "seuil"
 CLE_PRIX = "prix"
 
-#Retour des fonctions
-RETOUR_AJOUT = 1
-RETOUR_MODIFICATION = 2
-
 #Gestion des erreurs
 NO_ERR = 0
 ERR_FILE_NOT_FOUND = 1

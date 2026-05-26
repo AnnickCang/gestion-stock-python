@@ -3,7 +3,6 @@ from datetime import datetime
 
 import types_structure
 import constantes as const
-from gestion_stock import trouver_produit
 
 
 CLE_NOM = const.CLE_NOM
@@ -117,27 +116,19 @@ def effacer_ecran_terminal() -> None:
 
 
 def demander_info_produit(
-    stock: list[types_structure.Produit]
-) -> types_structure.Produit | None:
-    """Renvoie un dict Produit (valeurs saisies par l'utilisateur) 
+    produit: types_structure.Produit | None,
+    nom_produit: str = ""
+) -> types_structure.ChampsNumeriquesProduit | None:
+    """Renvoie un dict ChampsNumeriquesProduit (saisies par l'utilisateur)
     ou None si la saisie est annulée"""
-    titre = const.TITRE_SMENU_AJOUT_MODIF
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
-    
-    nom = demander_nom_produit(const.LBL_NOM_PRODUIT)
-    if nom is None:
-        return None
-    
-    produit = trouver_produit(stock, nom)
     if produit is None:
-        print(const.INFO_PRODUIT_AJOUTE.format(nom))
+        print(const.INFO_PRODUIT_AJOUTE.format(nom_produit))
     else:
         infos_produit = const.INFO_PRODUIT.format(
             produit[CLE_NOM],
-            produit[CLE_QUANTITE],
-            produit[CLE_SEUIL],
-            produit[CLE_PRIX]
+            produit[const.CLE_QUANTITE],
+            produit[const.CLE_SEUIL],
+            produit[const.CLE_PRIX]
         )
         print(const.INFO_VALEUR_ACTU, infos_produit, sep='')
 
@@ -154,7 +145,6 @@ def demander_info_produit(
         return None
     
     return {
-        CLE_NOM: nom, 
         CLE_QUANTITE: quantite, 
         CLE_SEUIL: seuil, 
         CLE_PRIX: prix
@@ -391,5 +381,11 @@ def afficher_entete_recherche() -> None:
 
 def afficher_entete_renommage() -> None:
     titre = const.TITRE_SMENU_RENOMMAGE
+    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+
+
+def afficher_entete_ajout_modification() -> None:
+    titre = const.TITRE_SMENU_AJOUT_MODIF
     _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
     _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)

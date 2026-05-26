@@ -22,12 +22,12 @@ def trouver_produit(
     return None
 
 
-def _ajouter_produit(
-    stock: list[types_structure.Produit], 
+def ajouter_produit(
+    stock: list[types_structure.Produit],
     nom: str, 
-    quantite: int, 
+    quantite: int,
     seuil: int, 
-    prix: float
+    prix: float,
 ) -> None:
     produit: types_structure.Produit = {
         CLE_NOM: nom,
@@ -36,30 +36,20 @@ def _ajouter_produit(
         CLE_PRIX: round(prix, 2)
     }
     stock.append(produit)
+    sauvegarder_stock(stock)
 
 
-def ajouter_ou_modifier_produit(
+def modifier_produit(
     stock: list[types_structure.Produit],
-    nom: str, 
+    produit: types_structure.Produit, 
     quantite: int,
     seuil: int, 
     prix: float,
-) -> int:
-    """Ajoute ou modifie un produit et renvoie le code correspondant"""
-    
-    produit = trouver_produit(stock, nom)
-
-    if produit is None:
-        _ajouter_produit(stock, nom, quantite, seuil, prix)
-        sauvegarder_stock(stock)
-        return const.RETOUR_AJOUT
-
+) -> None:
     produit[CLE_QUANTITE] = quantite
     produit[CLE_SEUIL] = seuil
     produit[CLE_PRIX] = round(prix, 2)
     sauvegarder_stock(stock)
-
-    return const.RETOUR_MODIFICATION
 
 
 def trouver_alertes(
