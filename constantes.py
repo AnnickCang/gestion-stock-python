@@ -116,8 +116,8 @@ LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation de '{0}' : "
 #Affichage d'informations sur les produits
 INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3:.2f} €"
 INFO_COUT_STOCK = "Total du stock : {0:0.2f} €"
-INFO_VALEUR_ACTU = "\tModification en cours de "
-INFO_PRODUIT_AJOUTE = "\tAjout de '{0}'"
+INFO_PRODUIT_MODIF_EN_COURS = "\tModification en cours de "
+INFO_PRODUIT_AJOUT_EN_COURS = "\tAjout en cours de '{0}'"
 INFO_STOCK_VIDE = (
     "Aucun produit enregistré.\nPour ajouter un produit aller dans "
     "le menu 'Ajouter / modifier un produit'."
@@ -147,15 +147,17 @@ ANO_MSG_NOUVEAU_FICHIER_STOCK = (
 )
 NO_ANO = "Produit OK"
 ANO_NOM_INEXISTANT = "Pas de champ '{0}', le produit sera ignoré".format(CLE_NOM)
-ANO_NOM_DOUBLON = "Le produit '{0}' existe déjà dans le stock, il sera ignoré."
+ANO_NOM_VIDE = "Le champ '{0}' est vide, le produit sera ignoré".format(CLE_NOM)
+ANO_NOM_DOUBLON = "Le produit '{0}' existe déjà dans le stock, il sera ignoré"
 ANO_CHAMP_PAS_STR = (
     "Le champ '{0}' n'est pas une chaîne de caractères, "
     "le produit sera ignoré"
 )
 ANO_CHAMP_TROP_LONG = "Le champ '{0}' dépasse {1} caractères, il sera tronqué"
-ANO_CHAMP_VIDE = "Le champ '{0}' est vide"
 ANO_NO_PRODUIT = "Produit n°{0} : "
-ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT = "Le champ '{0}' a été converti en '{1}'"
+ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT = (
+    "Le champ '{0}' a été converti en '{1}', sa valeur peut être tronquée"
+)
 ANO_CHAMP_NUM_CONV_VAL = (
     "Le champ '{0}' a été converti en nombre avec la valeur '{1}'"
 )

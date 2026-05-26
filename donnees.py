@@ -153,7 +153,7 @@ def _verifier_et_nettoyer_nom_produit(
     
     nom_strip = nom.strip()
     if nom_strip == "":
-        anomalies_nom.append(const.ANO_CHAMP_VIDE.format(CLE_NOM))
+        anomalies_nom.append(const.ANO_NOM_VIDE.format(CLE_NOM))
         return None, anomalies_nom
         
     if len(nom_strip) > largeur_colonne:
