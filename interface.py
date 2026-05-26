@@ -122,7 +122,7 @@ def demander_info_produit(
     """Renvoie un dict ChampsNumeriquesProduit (saisies par l'utilisateur)
     ou None si la saisie est annulée"""
     if produit is None:
-        print(const.INFO_PRODUIT_AJOUTE.format(nom_produit))
+        print(const.INFO_PRODUIT_AJOUT_EN_COURS.format(nom_produit))
     else:
         infos_produit = const.INFO_PRODUIT.format(
             produit[CLE_NOM],
@@ -130,7 +130,7 @@ def demander_info_produit(
             produit[const.CLE_SEUIL],
             produit[const.CLE_PRIX]
         )
-        print(const.INFO_VALEUR_ACTU, infos_produit, sep='')
+        print(const.INFO_PRODUIT_MODIF_EN_COURS, infos_produit, sep='')
 
     quantite = _demander_entier(const.LBL_QUANTITE_PRODUIT)
     if quantite is None:
@@ -209,10 +209,18 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
     _attendre_entree_retour_menu()
 
 
-def afficher_alertes(alertes: list[types_structure.Produit]) -> None:
+def afficher_alertes(
+    stock: list[types_structure.Produit],
+    alertes: list[types_structure.Produit]
+) -> None:
     """Affiche la liste des noms de produits en dessous du seuil"""
     titre = const.TITRE_SMENU_ALERTES
     _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+    
+    if not stock:
+        _afficher_stock_vide()
+        _attendre_entree_retour_menu()
+        return
     
     if not alertes:
         print(const.INFO_AUCUNE_ALERTE)

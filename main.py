@@ -141,7 +141,7 @@ def main():
 
             case const.MENUP_CHOIX_ALERTES:
                 alertes = gs.trouver_alertes(stock)
-                ifc.afficher_alertes(alertes)
+                ifc.afficher_alertes(stock, alertes)
 
             case const.MENUP_CHOIX_AJOUT_MODIF:
                 _gerer_ajout_modification(stock)
