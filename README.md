@@ -103,25 +103,49 @@ source .venv/bin/activate
 python main.py
 ```
 
-## Pistes d'amélioration
-Améliorations à venir
-- Pour une V1.1 (robustesse et navigation UX) :
-    - gestion des doublons dans le fichier stock.json
-    - gestion et contrôle des valeurs de Produit
-    - amélioration de la fonctionnalité de recherche : proposer des noms de produits proches de la saisie de l'utilisateur
-    - amélioration de la fonctionnalité de modification : afficher les valeurs existantes d'un produit pour permettre la simple validation au lieu de saisir à nouveau ces valeurs
-    - possibilité de revenir au menu principal même en cours de saisie
-- Pour une V1.2 (améliorations des affichages) :
-    - mise en évidence (texte en rouge) des valeurs problématiques (ex: prix nul, quantité inférieure au seuil)
-    - ajout d'une colonne en première position pour indiquer le numéro de ligne
-    - gestion de la pagination pour l'affichage du stock, des alertes et de l'inventaire (ex: 10 produits par page)
-- Pour une V2.0 :
-    - refonte du projet pour une version web Flask
-    - pour les données, remplacement de la liste de dictionnaires par un dictionnaire de dictionnaires
-    - rajouter deux valeurs pour Produit : unité (ex: kg, L, pièce, ...) et type
-    - possibilité d'affichage par type de produits
-    - possibilité de trier l'affichage autrement que par le nom du produit
-    - autocomplétion pour le nom du produit
+## Evolution du projet
+Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience utilisateur et l'architecture du code.
+
+### v1.0 - Base fonctionnelle
+- gestion des produits (ajout, modification, suppression)
+- affichage du stock, des alertes et de l'inventaire
+- sauvegarde des données dans un fichier JSON
+- architecture modulaire initiale
+
+### v1.1 - Robustesse + UX
+- validation et nettoyage avancé du fichier `stock.json`
+- contrôle de cohérence des données et gestion des cas invalides
+- gestion des doublons
+- normalisation Unicode pour comparaison et tri
+- recherche tolérante avec suggestions
+- amélioration des messages utilisateur
+- navigation améliorée avec retour rapide au menu principal pendant une saisie
+- refactorisation architecture / séparation des responsabilités
+- amélioration de la maintenabilité du code
+
+### v1.2 - Amélioration des affichages + UX (à venir)
+- mise en évidence (texte en rouge) des valeurs problématiques (ex: prix nul, quantité inférieure au seuil)
+- ajout d'une colonne en première position pour indiquer le numéro de ligne
+- gestion de la pagination pour l'affichage du stock, des alertes et de l'inventaire (ex: 10 produits par page)
+- amélioration de l'affichage (centrage, espacements, clarté des messages)
+- création d'un fichier imprimable pour le stock, les alertes et l'inventaire
+- amélioration du typage statique et de la robustesse du code
+- gestion des clés inutilisées dans le fichier JSON (état actuel : supprimées silencieusement lors d'une sauvegarde) : afficher un warning
+- version bilingue du fichier `README.md`
+- traduction en anglais des commentaires du fichier `.gitignore`
+
+### v2.0 - Refonte web Flask (à venir)
+- refonte du projet en application web avec Flask
+- renommage en anglais de toutes les appellations dans le code
+- pour les données, remplacement de la liste de dictionnaires par un dictionnaire de dictionnaires
+- ajout des champs `unité` et `type`
+- modification du type des champs `quantite` et `seuil` en `float`
+- possibilité d'affichage par type de produits
+- possibilité de trier l'affichage autrement que par le nom du produit
+- autocomplétion pour le nom du produit
+- paramétrage de la longueur maximale du champ "nom"
+- possibilité de définir le nombre maximum de produits suggérés lors d'une recherche
+- affichage des valeurs existantes d'un produit lors de sa modification (champs pré-remplis)
 
 ## Auteur
 Projet réalisé dans le cadre d'un apprentissage Python orienté reconversion professionnelle.
