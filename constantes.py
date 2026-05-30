@@ -1,13 +1,13 @@
-#Fichiers du programme
+# Fichiers du programme
 FICHIER_STOCK = "stock.json"
 
-#Clés du type Produit
+# Clés du type Produit
 CLE_NOM = "nom"
 CLE_QUANTITE = "quantite"
 CLE_SEUIL = "seuil"
 CLE_PRIX = "prix"
 
-#Gestion des erreurs
+# Gestion des erreurs
 NO_ERR = 0
 ERR_FILE_NOT_FOUND = 1
 ERR_JSON_DECODE_ERROR = 2
@@ -40,7 +40,7 @@ ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE = (
     "ailleurs ou renommez-le avant de continuer.".format(FICHIER_STOCK)
 )
 
-#Aide à la navigation
+# Aide à la navigation
 NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU = (
     "\n('Entrée' pour revenir au menu principal) "
 )
@@ -49,7 +49,7 @@ NAV_MSG_SAISIE_VIDE_RETOUR_MENU = (
 )
 NAV_MSG_ENTREE_POUR_CONTINUER = "\n(Appuyer sur 'Entrée' pour continuer)"
 
-#Messages de contrôle
+# Messages de contrôle
 CTRL_NB_POSITIF = "Veuillez entrer un nombre positif ou nul"
 CTRL_NB_VALIDE = "Veuillez entrer un nombre valide"
 CTRL_PRIX_VALIDE = "Veuillez entrer un prix valide"
@@ -59,13 +59,13 @@ CTRL_REP_OUI_NON = "Veuillez répondre par 'o' ou 'n'"
 CTRL_REP_OUI = "O"
 CTRL_REP_NON = "N"
 
-#Questions
+# Questions
 QST_SUPPRESSION = "Confirmer la suppression du produit '{0}' (o/n) ? "
 QST_RETOUR_MENU_PRINCIPAL = (
     "Annuler la saisie en cours et revenir au menu principal (o/n) ? "
 )
 
-#Menu principal et sous menus
+# Menu principal et sous menus
 TITRE_MENU_PRINCIPAL = "--- MENU PRINCIPAL ---"
 MENUP_SM_STOCK = "1. Afficher le stock"
 MENUP_SM_ALERTES = "2. Voir les alertes"
@@ -95,7 +95,7 @@ TITRE_SMENU_RECHERCHE = "--- RECHERCHER UN PRODUIT ---"
 TITRE_SMENU_RENOMMAGE = "--- RENOMMER UN PRODUIT ---"
 TITRE_SMENU_INVENTAIRE = "--- INVENTAIRE AU "
 
-#Affichage des tableaux
+# Affichage des tableaux
 TIRET_CADRE = "-"
 LARGEUR_CADRE = 55   
 LARGEUR_CADRE_INVENTAIRE = 73
@@ -106,15 +106,15 @@ COL_SEUIL = "seuil"
 COL_PRIX = "prix UHT"
 COL_TOTAL = "total HT"
 
-#Labels
+# Labels
 LBL_NOM_PRODUIT = "Produit : "
 LBL_QUANTITE_PRODUIT = "Quantité : "
 LBL_SEUIL_PRODUIT = "Seuil : "
 LBL_PRIX_PRODUIT = "Prix : "
 LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation de '{0}' : "
 
-#Affichage d'informations sur les produits
-INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3:.2f} €"
+# Affichage d'informations sur les produits
+INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3} €"
 INFO_COUT_STOCK = "Total du stock : {0:0.2f} €"
 INFO_PRODUIT_MODIF_EN_COURS = "\tModification en cours de "
 INFO_PRODUIT_AJOUT_EN_COURS = "\tAjout en cours de '{0}'"
@@ -133,7 +133,7 @@ INFO_SUPPRESSION_STOCK_VIDE = "Le stock est vide : suppression impossible"
 INFO_RENOMMAGE_STOCK_VIDE = "Le stock est vide : renommage impossible"
 
 
-#Gestion des anomalies dans le fichier de données
+# Gestion des anomalies dans le fichier de données
 ANO_ENTIER = "int"
 ANO_FLOTTANT = "float"
 ANO_LISTE = (
@@ -169,8 +169,12 @@ ANO_CHAMP_NUM_INEXISTANT = (
 )
 ANO_PRODUIT_STRUCTURE_INVALIDE = "Produit invalide, le produit sera ignoré"
 
-#Suggestions de recherche
+# Suggestions de recherche
 RECH_NB_ELEMENTS_RETOUR = 5
 RECH_SEUIL_SIMILARITE = 0.5 # de 0.0 (très permissif) à 1.0 (strictement identique)
 RECH_SUGGESTIONS = "Ce produit est introuvable. Suggestions possibles :"
 RECH_NOM_SUGGERE = "- {0}"
+
+# Formatage de texte
+FORMAT_RESET = "\033[0m"
+FORMAT_ROUGE = "\033[31m"
