@@ -3,6 +3,8 @@ from datetime import datetime
 
 import types_structure
 import constantes as const
+from gestion_stock import verifier_quantite_sous_seuil
+from gestion_stock import verifier_prix_nul
 
 
 CLE_NOM = const.CLE_NOM
@@ -111,6 +113,27 @@ def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
     print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
 
 
+def _mettre_en_rouge(texte: str, condition: bool) -> str:
+    if condition:
+        return f"{const.FORMAT_ROUGE}{texte}{const.FORMAT_RESET}"
+    return texte
+
+
+def _formater_infos_produit(
+    produit: types_structure.Produit
+) -> tuple[str, str, str, str]:
+    nom = produit[CLE_NOM]
+    quantite = _mettre_en_rouge(
+        str(produit[CLE_QUANTITE]),
+        verifier_quantite_sous_seuil(produit)
+    )
+    seuil = str(produit[CLE_SEUIL])
+    prix = f"{produit[CLE_PRIX]:.2f}"
+    prix = _mettre_en_rouge(prix, verifier_prix_nul(produit))
+
+    return nom, quantite, seuil, prix
+
+
 def effacer_ecran_terminal() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -124,12 +147,8 @@ def demander_info_produit(
     if produit is None:
         print(const.INFO_PRODUIT_AJOUT_EN_COURS.format(nom_produit))
     else:
-        infos_produit = const.INFO_PRODUIT.format(
-            produit[CLE_NOM],
-            produit[const.CLE_QUANTITE],
-            produit[const.CLE_SEUIL],
-            produit[const.CLE_PRIX]
-        )
+        nom, quantite, seuil, prix = _formater_infos_produit(produit)
+        infos_produit = const.INFO_PRODUIT.format(nom, quantite, seuil, prix)
         print(const.INFO_PRODUIT_MODIF_EN_COURS, infos_produit, sep='')
 
     quantite = _demander_entier(const.LBL_QUANTITE_PRODUIT)
@@ -201,10 +220,14 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
     
     _afficher_nom_colonnes_stock_et_alertes()
     for produit in stock:
-        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
-              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
-              f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
+        nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
+        quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
+        quantite = _mettre_en_rouge(
+            quantite,
+            verifier_quantite_sous_seuil(produit)
         )
+        seuil = f"{produit[CLE_SEUIL]:>{LARGEUR_COL}}"
+        print(f"| {nom} | {quantite} | {seuil} |")
     _afficher_bordure_cadre(LARGEUR_CADRE)
     _attendre_entree_retour_menu()
 
@@ -239,13 +262,8 @@ def afficher_alertes(
 
 def afficher_info_produit(produit: types_structure.Produit) -> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
-    print(
-        const.INFO_PRODUIT.format(
-            produit[CLE_NOM],
-            produit[CLE_QUANTITE],
-            produit[CLE_SEUIL],
-            produit[CLE_PRIX])
-    )
+    nom, quantite, seuil, prix = _formater_infos_produit(produit)
+    print(const.INFO_PRODUIT.format(nom, quantite, seuil, prix))
     _afficher_separateur()
         
 
@@ -266,11 +284,15 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     cout_total_stock = 0.0
     for produit in stock:
         cout_total_produit = produit[CLE_QUANTITE] * produit[CLE_PRIX]
-        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
-              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
-              f"| {produit[CLE_PRIX]:>{LARGEUR_COL}.2f} "
-              f"| {cout_total_produit:>{LARGEUR_COL}.2f} |"
+        nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
+        quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
+        prix = f"{produit[CLE_PRIX]:>{LARGEUR_COL}.2f}"
+        prix = _mettre_en_rouge(
+            prix,
+            verifier_prix_nul(produit)
         )
+        cout_total = f"{cout_total_produit:>{LARGEUR_COL}.2f}"
+        print(f"| {nom} | {quantite} | {prix} | {cout_total} |")
         cout_total_stock += cout_total_produit
     _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
     texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)

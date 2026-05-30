@@ -96,3 +96,17 @@ def verifier_nom_disponible(
             return False
     
     return True
+
+
+def verifier_quantite_sous_seuil(produit: types_structure.Produit) -> bool:
+    """Renvoie True si la quantité d'un produit est sous le seuil"""
+    if produit[CLE_QUANTITE] < produit[CLE_SEUIL]:
+        return True
+    return False
+
+
+def verifier_prix_nul(produit: types_structure.Produit) -> bool:
+    """Renvoie True si le prix est nul"""
+    if produit[CLE_PRIX] == 0:
+        return True
+    return False
