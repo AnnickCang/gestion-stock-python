@@ -1,12 +1,12 @@
 # Gestion de stock
-Application de gestion de stock en CLI (v1.0)
+Application de gestion de stock avec interface en ligne de commande (CLI)
 
 ## Description
 Application de gestion simple d'un stock de produits (lister les produits, les alertes et l'inventaire, gérer l'ajout et la modification des produits) avec une architecture modulaire (séparation de la gestion métier, des données et des interactions avec l'utilisateur) et une sauvegarde des données dans un fichier stock.json.
 
 ## Structure du projet
 ```
-GestionDeStock/
+gestion-stock-python/
 |
 |- main.py
 |- constantes.py
@@ -47,7 +47,6 @@ Les données sont stockées sous forme d'une liste de dictionnaires :
 - Recherche insensible à la casse et aux accents avec proposition de suggestions
 - Renommage avec vérification que le nouveau nom n'existe pas déjà dans la liste des produits
 - Affichage de l'inventaire avec calcul du coût total du stock à la date du jour
-
 - Tous les affichages (stock, alertes, inventaire) sont triés par ordre alphabétique avec une normalisation Unicode
 
 ## Aperçu de l'interface
@@ -80,8 +79,8 @@ Les données sont stockées sous forme d'une liste de dictionnaires :
 
 ## Installation
 ```bash
-git clone <url-du-repo>
-cd GestionDeStock
+git clone https://github.com/AnnickCang/gestion-stock-python.git
+cd gestion-stock-python
 ```
 ### Création de l'environnement virtuel
 ```bash
@@ -123,7 +122,7 @@ Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience
 - refactorisation architecture / séparation des responsabilités
 - amélioration de la maintenabilité du code
 
-### v1.2 - Amélioration des affichages + UX (à venir)
+### v1.2 - Amélioration des affichages + UX (en cours)
 - mise en évidence (texte en rouge) des valeurs problématiques (ex: prix nul, quantité inférieure au seuil)
 - ajout d'une colonne en première position pour indiquer le numéro de ligne
 - gestion de la pagination pour l'affichage du stock, des alertes et de l'inventaire (ex: 10 produits par page)
