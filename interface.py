@@ -39,7 +39,8 @@ def _attendre_entree_retour_menu() -> None:
 
 def _afficher_nom_colonnes_stock_et_alertes() -> None:
     _afficher_bordure_cadre(LARGEUR_CADRE)
-    print(f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
+    print(f"| {const.COL_NUMERO_LIGNE:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
+          f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
           f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
           f"| {const.COL_SEUIL:>{LARGEUR_COL}} |"
     )
@@ -48,7 +49,8 @@ def _afficher_nom_colonnes_stock_et_alertes() -> None:
 
 def _afficher_nom_colonnes_inventaire() -> None:
     _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
-    print(f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
+    print(f"| {const.COL_NUMERO_LIGNE:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
+          f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
           f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
           f"| {const.COL_PRIX:>{LARGEUR_COL}} "
           f"| {const.COL_TOTAL:>{LARGEUR_COL}} |"
@@ -219,7 +221,8 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
         return
     
     _afficher_nom_colonnes_stock_et_alertes()
-    for produit in stock:
+    for numero, produit in enumerate(stock, start=1):
+        no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
         nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
         quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
         quantite = _mettre_en_rouge(
@@ -227,7 +230,7 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
             verifier_quantite_sous_seuil(produit)
         )
         seuil = f"{produit[CLE_SEUIL]:>{LARGEUR_COL}}"
-        print(f"| {nom} | {quantite} | {seuil} |")
+        print(f"| {no_ligne} | {nom} | {quantite} | {seuil} |")
     _afficher_bordure_cadre(LARGEUR_CADRE)
     _attendre_entree_retour_menu()
 
@@ -251,8 +254,9 @@ def afficher_alertes(
         return
     
     _afficher_nom_colonnes_stock_et_alertes()
-    for produit in alertes:
-        print(f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
+    for no_ligne, produit in enumerate(alertes, start=1):
+        print(f"| {no_ligne:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
+              f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
               f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
               f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
         )
@@ -282,7 +286,8 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     
     _afficher_nom_colonnes_inventaire()
     cout_total_stock = 0.0
-    for produit in stock:
+    for numero, produit in enumerate(stock, start=1):
+        no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
         cout_total_produit = produit[CLE_QUANTITE] * produit[CLE_PRIX]
         nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
         quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
@@ -292,7 +297,7 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
             verifier_prix_nul(produit)
         )
         cout_total = f"{cout_total_produit:>{LARGEUR_COL}.2f}"
-        print(f"| {nom} | {quantite} | {prix} | {cout_total} |")
+        print(f"| {no_ligne} | {nom} | {quantite} | {prix} | {cout_total} |")
         cout_total_stock += cout_total_produit
     _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
     texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)
