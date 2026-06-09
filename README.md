@@ -8,6 +8,8 @@ Application de gestion simple d'un stock de produits (lister les produits, les a
 ```
 gestion-stock-python/
 |
+|- images/
+|  |- inventaire.png
 |- main.py
 |- constantes.py
 |- donnees.py
@@ -47,35 +49,33 @@ Les données sont stockées sous forme d'une liste de dictionnaires :
 - Recherche insensible à la casse et aux accents avec proposition de suggestions
 - Renommage avec vérification que le nouveau nom n'existe pas déjà dans la liste des produits
 - Affichage de l'inventaire avec calcul du coût total du stock à la date du jour
-- Tous les affichages (stock, alertes, inventaire) sont triés par ordre alphabétique avec une normalisation Unicode
+- Tous les affichages (stock, alertes, inventaire) sont triés par ordre alphabétique avec une normalisation Unicode et une pagination
+- Les valeurs nécessitant une attention particulière (prix nul, quantité inférieure au seuil) sont affichées en rouge
 
-## Aperçu de l'interface
+## Aperçus de l'interface
 ```text
-                    --- INVENTAIRE AU 23/04/2026 ---                     
--------------------------------------------------------------------------
-| produit         |        quantité |        prix UHT |        total HT |
--------------------------------------------------------------------------
-| banane          |               5 |            0.20 |            1.00 |
-| coca cola       |              25 |            0.45 |           11.25 |
-| fanta           |              10 |            0.10 |            1.00 |
-| farine          |               2 |           15.50 |           31.00 |
-| Fécule de pdt   |               2 |            8.50 |           17.00 |
-| glutamate       |              10 |            1.10 |           11.00 |
-| jus d'orange    |               5 |            0.85 |            4.25 |
-| jus de pomme    |               5 |            0.85 |            4.25 |
-| lait de coco    |               5 |            1.45 |            7.25 |
-| Mandarine       |              10 |            0.45 |            4.50 |
-| mangue          |               3 |            2.99 |            8.97 |
-| orangina        |              15 |            1.10 |           16.50 |
-| pomme gala      |               5 |            0.35 |            1.75 |
-| riz             |               3 |           45.00 |          135.00 |
-| tomates         |               5 |            0.50 |            2.50 |
--------------------------------------------------------------------------
+                    --- ETAT DU STOCK ---                    
+-------------------------------------------------------------
+|   n° | produit         |        quantité |           seuil |
+-------------------------------------------------------------
+|    1 | Abricot         |               5 |               3 |
+|    2 | Banane          |               5 |               2 |
+|    3 | Bonbon cola     |              30 |               5 |
+|    4 | Bonbon Tagada   |              25 |              10 |
+|    5 | Café            |               8 |               2 |
+|    6 | Cherry coke     |               6 |               3 |
+|    7 | coca cola       |               3 |               2 |
+|    8 | concombre       |               5 |               2 |
+|    9 | Fanta           |               2 |               1 |
+|   10 | Fraise Tagada   |              25 |               5 |
+-------------------------------------------------------------
+Page 1/3
 
-                                                Total du stock : 257.22 €
+[Entrée] : retour menu principal -                            - [s + Entrée] : suivante
 
-('Entrée' pour revenir au menu principal) 
+Choix :  
 ```
+![Inventaire avec valeurs en rouge](images/inventaire.png)
 
 ## Installation
 ```bash
