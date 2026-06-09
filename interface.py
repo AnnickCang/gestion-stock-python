@@ -15,6 +15,7 @@ LARGEUR_COL = const.LARGEUR_COL
 LARGEUR_CADRE = const.LARGEUR_CADRE
 LARGEUR_CADRE_INVENTAIRE = const.LARGEUR_CADRE_INVENTAIRE
 TIRET_CADRE = const.TIRET_CADRE
+NB_PRODUITS_PAR_PAGE = const.NB_PRODUITS_PAR_PAGE
 
 
 def _afficher_separateur() -> None:
@@ -35,6 +36,33 @@ def _attendre_entree_utilisateur() -> None:
 
 def _attendre_entree_retour_menu() -> None:
     input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+
+
+def _attendre_choix_navigation_page(choix_possible: int) -> str:
+    MENUP_CHOIX = const.MENUP_CHOIX
+    RETOUR_MENU = const.CHOIX_RETOUR_MENU
+    PAGE_PRECEDENTE = const.CHOIX_PAGE_PRECEDENTE
+    PAGE_SUIVANTE = const.CHOIX_PAGE_SUIVANTE
+
+    if choix_possible == const.NAV_RETOUR_SEUL:
+        input()
+        return RETOUR_MENU
+    
+    choix = input(MENUP_CHOIX).strip().upper()
+    match choix_possible:
+        case const.NAV_RETOUR_PRECEDENT:
+            while choix not in [RETOUR_MENU, PAGE_PRECEDENTE]:
+                print(const.CTRL_CHOIX_ENTREE_OU_P)
+                choix = input(MENUP_CHOIX).strip().upper()
+        case const.NAV_RETOUR_SUIVANT:
+            while choix not in [RETOUR_MENU, PAGE_SUIVANTE]:
+                print(const.CTRL_CHOIX_ENTREE_OU_S)
+                choix = input(MENUP_CHOIX).strip().upper()
+        case const.NAV_RETOUR_PRECEDENT_SUIVANT:
+            while choix not in [RETOUR_MENU, PAGE_PRECEDENTE, PAGE_SUIVANTE]:
+                print(const.CTRL_CHOIX_ENTREE_OU_P_OU_S)
+                choix = input(MENUP_CHOIX).strip().upper()
+    return choix
 
 
 def _afficher_nom_colonnes_stock_et_alertes() -> None:
@@ -113,6 +141,49 @@ def _afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
 
 def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
     print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
+
+
+def _afficher_navigation_page(page_courante: int, total_pages: int) -> int:
+    RETOUR_MENU = const.TXT_RETOUR_MENU
+    page_precedente = const.TXT_PAGE_PRECEDENTE
+    page_suivante = const.TXT_PAGE_SUIVANTE
+    page_precedente_vide = const.TXT_PAGE_PRECEDENTE_VIDE
+
+    if (page_courante == 1) and (page_courante == total_pages):
+        print(f"{RETOUR_MENU}")
+        return const.NAV_RETOUR_SEUL
+
+    if page_courante == 1:
+        print(f"{RETOUR_MENU} - {page_precedente_vide} - {page_suivante}")
+        return const.NAV_RETOUR_SUIVANT
+    
+    if page_courante == total_pages:
+        print(f"{RETOUR_MENU} - {page_precedente} -")
+        return const.NAV_RETOUR_PRECEDENT
+    
+    print(f"{RETOUR_MENU} - {page_precedente} - {page_suivante}")
+    return const.NAV_RETOUR_PRECEDENT_SUIVANT
+
+
+def _calculer_total_pages(produits: list[types_structure.Produit]) -> int:
+    nb_produits = len(produits)
+    total_pages = nb_produits // NB_PRODUITS_PAR_PAGE
+    if (nb_produits % NB_PRODUITS_PAR_PAGE != 0):
+        total_pages +=1
+    return total_pages
+
+
+def _mettre_a_jour_page_courante(
+    choix_navigation: int,
+    page_courante: int
+) -> int | None:
+    match _attendre_choix_navigation_page(choix_navigation):
+        case const.CHOIX_PAGE_PRECEDENTE:
+            return page_courante - 1
+        case const.CHOIX_PAGE_SUIVANTE:
+            return page_courante + 1
+        case const.CHOIX_RETOUR_MENU:
+            return None
 
 
 def _mettre_en_rouge(texte: str, condition: bool) -> str:
@@ -211,57 +282,97 @@ def demander_confirmation_suppression(nom_produit: str) -> bool:
 
 
 def afficher_stock(stock: list[types_structure.Produit]) -> None:
-    """Affiche le stock actuel avec quantités et seuils"""
+    """Affiche le stock actuel avec quantités et seuils et une pagination"""
     titre = const.TITRE_SMENU_STOCK
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
     
     if not stock:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
     
-    _afficher_nom_colonnes_stock_et_alertes()
-    for numero, produit in enumerate(stock, start=1):
-        no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
-        nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
-        quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
-        quantite = _mettre_en_rouge(
-            quantite,
-            verifier_quantite_sous_seuil(produit)
-        )
-        seuil = f"{produit[CLE_SEUIL]:>{LARGEUR_COL}}"
-        print(f"| {no_ligne} | {nom} | {quantite} | {seuil} |")
-    _afficher_bordure_cadre(LARGEUR_CADRE)
-    _attendre_entree_retour_menu()
+    debut = 0
+    fin = NB_PRODUITS_PAR_PAGE
+    page_courante = 1
+    total_pages = _calculer_total_pages(stock)
+
+    while True:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+
+        _afficher_nom_colonnes_stock_et_alertes()
+        for numero, produit in enumerate(stock[debut:fin], start=1):
+            no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
+            nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
+            quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
+            quantite = _mettre_en_rouge(
+                quantite,
+                verifier_quantite_sous_seuil(produit)
+            )
+            seuil = f"{produit[CLE_SEUIL]:>{LARGEUR_COL}}"
+            print(f"| {no_ligne} | {nom} | {quantite} | {seuil} |")
+        _afficher_bordure_cadre(LARGEUR_CADRE)
+
+        print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
+
+        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
+        if page_courante is None:
+            break
+
+        debut = (page_courante - 1) * NB_PRODUITS_PAR_PAGE
+        fin = debut + NB_PRODUITS_PAR_PAGE
+
+        effacer_ecran_terminal()
 
 
 def afficher_alertes(
     stock: list[types_structure.Produit],
     alertes: list[types_structure.Produit]
 ) -> None:
-    """Affiche la liste des noms de produits en dessous du seuil"""
+    """Affiche la liste des noms de produits en dessous du seuil
+    avec une pagination"""
     titre = const.TITRE_SMENU_ALERTES
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
     
     if not stock:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
     
     if not alertes:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
         print(const.INFO_AUCUNE_ALERTE)
         _attendre_entree_retour_menu()
         return
     
-    _afficher_nom_colonnes_stock_et_alertes()
-    for no_ligne, produit in enumerate(alertes, start=1):
-        print(f"| {no_ligne:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
-              f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
-              f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
-              f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
-        )
-    _afficher_bordure_cadre(LARGEUR_CADRE)
-    _attendre_entree_retour_menu()
+    debut = 0
+    fin = NB_PRODUITS_PAR_PAGE
+    page_courante = 1
+    total_pages = _calculer_total_pages(alertes)
+
+    while True:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+
+        _afficher_nom_colonnes_stock_et_alertes()
+        for no_ligne, produit in enumerate(alertes[debut:fin], start=1):
+            print(f"| {no_ligne:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
+                f"| {produit[CLE_NOM]:{LARGEUR_COL}} "
+                f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
+                f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
+            )
+        _afficher_bordure_cadre(LARGEUR_CADRE)
+
+        print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
+
+        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
+        if page_courante is None:
+            break
+        
+        debut = (page_courante - 1) * NB_PRODUITS_PAR_PAGE
+        fin = debut + NB_PRODUITS_PAR_PAGE
+
+        effacer_ecran_terminal()
 
 
 def afficher_info_produit(produit: types_structure.Produit) -> None:
@@ -272,37 +383,59 @@ def afficher_info_produit(produit: types_structure.Produit) -> None:
         
 
 def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
-    """Affiche les données relatives à chaque produit ainsi que le montant
-    total pour chaque produit et le montant de la totalité du stock
-    à la date du jour"""
+    """Affiche les données d'inventaire avec une pagination.
+    Le coût total du stock est affiché sur la dernière page."""
     jour = datetime.today().strftime("%d/%m/%Y")
     titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
     
     if not stock:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
     
-    _afficher_nom_colonnes_inventaire()
-    cout_total_stock = 0.0
-    for numero, produit in enumerate(stock, start=1):
-        no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
-        cout_total_produit = produit[CLE_QUANTITE] * produit[CLE_PRIX]
-        nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
-        quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
-        prix = f"{produit[CLE_PRIX]:>{LARGEUR_COL}.2f}"
-        prix = _mettre_en_rouge(
-            prix,
-            verifier_prix_nul(produit)
-        )
-        cout_total = f"{cout_total_produit:>{LARGEUR_COL}.2f}"
-        print(f"| {no_ligne} | {nom} | {quantite} | {prix} | {cout_total} |")
-        cout_total_stock += cout_total_produit
-    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
-    texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)
-    print(f"\n{texte_total_stock:>{LARGEUR_CADRE_INVENTAIRE}}")
-    _attendre_entree_retour_menu()
+    cout_total_stock = sum(
+        produit[CLE_QUANTITE] * produit[CLE_PRIX]
+        for produit in stock
+    )
+
+    debut = 0
+    fin = NB_PRODUITS_PAR_PAGE
+    page_courante = 1
+    total_pages = _calculer_total_pages(stock)
+
+    while True:
+        _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+        _afficher_nom_colonnes_inventaire()
+        for numero, produit in enumerate(stock[debut:fin], start=1):
+            no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
+            cout_total_produit = produit[CLE_QUANTITE] * produit[CLE_PRIX]
+            nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
+            quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
+            prix = f"{produit[CLE_PRIX]:>{LARGEUR_COL}.2f}"
+            prix = _mettre_en_rouge(
+                prix,
+                verifier_prix_nul(produit)
+            )
+            cout_total = f"{cout_total_produit:>{LARGEUR_COL}.2f}"
+            print(f"| {no_ligne} | {nom} | {quantite} | {prix} | {cout_total} |")
+        _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+
+        if page_courante == total_pages:
+            texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)
+            print(f"\n{texte_total_stock:>{LARGEUR_CADRE_INVENTAIRE}}\n")
+
+        print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
+
+        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
+        if page_courante is None:
+            break
+
+        debut = (page_courante - 1) * NB_PRODUITS_PAR_PAGE
+        fin = debut + NB_PRODUITS_PAR_PAGE
+
+        effacer_ecran_terminal()
 
 
 def afficher_erreur(code_err: int) -> None:
