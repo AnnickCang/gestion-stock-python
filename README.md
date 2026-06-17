@@ -102,7 +102,7 @@ source .venv/bin/activate
 python main.py
 ```
 
-## Evolution du projet
+## Évolution du projet
 Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience utilisateur et l'architecture du code.
 
 ### v1.0 - Base fonctionnelle
@@ -133,8 +133,9 @@ Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience
 - version bilingue du fichier `README.md`
 - traduction en anglais des commentaires du fichier `.gitignore`
 
-### v2.0 - Refonte web Flask (à venir)
-- refonte du projet en application web avec Flask
+### v2.0 - Migration vers Flask (à venir)
+- migration de l'interface CLI vers une interface web avec Flask
+- remplacement du stockage JSON par une base de données SQL
 - renommage en anglais de toutes les appellations dans le code
 - pour les données, remplacement de la liste de dictionnaires par un dictionnaire de dictionnaires
 - ajout des champs `unité` et `type`
