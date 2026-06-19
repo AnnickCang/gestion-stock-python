@@ -12,7 +12,7 @@ NO_ERR = 0
 ERR_FILE_NOT_FOUND = 1
 ERR_JSON_DECODE_ERROR = 2
 ERR_STOCK_PAS_UNE_LISTE = 3
-ERR_MSG_FICHIER_MAUVAISE_STRUCTURE =(
+ERR_MSG_FICHIER_MAUVAISE_STRUCTURE = (
     "\nLa structure du fichier de données '{0}' n'est pas adaptée.".format(
         FICHIER_STOCK
     )
@@ -103,11 +103,13 @@ MENUP_CHOIX_QUITTER = "Q"
 
 TITRE_SMENU_STOCK = "--- ETAT DU STOCK ---"
 TITRE_SMENU_ALERTES = "--- PRODUITS EN ALERTE ---"
-TITRE_SMENU_AJOUT_MODIF = "--- AJOUTER / MODIFIER un produit ---"
+TITRE_SMENU_AJOUT_MODIF = "--- AJOUTER / MODIFIER UN PRODUIT ---"
 TITRE_SMENU_SUPPRESSION = "--- SUPPRIMER UN PRODUIT ---"
 TITRE_SMENU_RECHERCHE = "--- RECHERCHER UN PRODUIT ---"
 TITRE_SMENU_RENOMMAGE = "--- RENOMMER UN PRODUIT ---"
 TITRE_SMENU_INVENTAIRE = "--- INVENTAIRE AU "
+
+NB_LIGNES_VIDES_INTER_ACTION = 2
 
 # Affichage des tableaux
 TIRET_CADRE = "-"
@@ -130,6 +132,7 @@ TXT_RETOUR_MENU = "[Entrée] : retour menu principal"
 TXT_PAGE_PRECEDENTE = f"{'[p + Entrée] : précédente':26}"
 TXT_PAGE_SUIVANTE = "[s + Entrée] : suivante"
 TXT_PAGE_PRECEDENTE_VIDE = f"{' ':26}"
+NB_LIGNES_VIDES_SOUS_TABLEAU = 3
 
 # Labels
 LBL_NOM_PRODUIT = "Produit : "
@@ -150,8 +153,8 @@ INFO_STOCK_VIDE = (
 INFO_PROD_AJOUTE = "Le produit a été ajouté"
 INFO_PROD_MODIFIE = "Le produit a été modifié"
 INFO_PROD_NON_TROUVE = "\nProduit introuvable"
-INFO_PROD_SUPPRIME = "\nLe produit '{0}' a été supprimé"
-INFO_AUCUNE_ALERTE = "\nStock OK, rien à recharger"
+INFO_PROD_SUPPRIME = "Le produit '{0}' a été supprimé"
+INFO_AUCUNE_ALERTE = "Stock OK, rien à recharger"
 INFO_PROD_RENOMME = "\nLe produit '{0}' a été renommé en '{1}'"
 INFO_RECHERCHE_STOCK_VIDE = "Le stock est vide : recherche impossible"
 INFO_SUPPRESSION_STOCK_VIDE = "Le stock est vide : suppression impossible"
