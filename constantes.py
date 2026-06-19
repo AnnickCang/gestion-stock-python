@@ -129,10 +129,10 @@ CHOIX_RETOUR_MENU = ""
 NB_LIGNES_VIDES_SOUS_TABLEAU = 3
 
 # Labels
-LBL_NOM_PRODUIT = "Produit : "
-LBL_QUANTITE_PRODUIT = "Quantité : "
-LBL_SEUIL_PRODUIT = "Seuil d'alerte : "
-LBL_PRIX_PRODUIT = "Prix : "
+LBL_NOM_PRODUIT = "Produit \t: "
+LBL_QUANTITE_PRODUIT = "Quantité \t: "
+LBL_SEUIL_PRODUIT = "Seuil d'alerte \t: "
+LBL_PRIX_PRODUIT = "Prix \t\t: "
 LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation de '{0}' : "
 
 # Affichage d'informations sur les produits
