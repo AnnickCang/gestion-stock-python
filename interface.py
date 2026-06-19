@@ -414,7 +414,11 @@ def afficher_alertes(
 def afficher_info_produit(produit: types_structure.Produit) -> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
     nom, quantite, seuil, prix = _formater_infos_produit(produit)
-    print(const.INFO_PRODUIT.format(nom, quantite, seuil, prix))
+    _afficher_lignes_vides()
+    print(f"{const.LBL_NOM_PRODUIT}{nom}")
+    print(f"{const.LBL_QUANTITE_PRODUIT}{quantite}")
+    print(f"{const.LBL_SEUIL_PRODUIT}{seuil}")
+    print(f"{const.LBL_PRIX_PRODUIT}{prix}")
     _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
         
 
