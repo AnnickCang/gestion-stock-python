@@ -33,12 +33,18 @@ def _afficher_stock_vide() -> None:
     print(const.INFO_STOCK_VIDE)
 
 
+def _attendre_entree_sans_message() -> None:
+    _afficher_lignes_vides()
+    input()
+
+
 def _attendre_entree_utilisateur() -> None:
     input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
 
 
 def _attendre_entree_retour_menu() -> None:
-    input(const.NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU)
+    _afficher_lignes_vides()
+    input(const.NAV_RETOUR_MENU)
 
 
 def _attendre_choix_navigation_page(choix_possible: int) -> str:
@@ -143,15 +149,16 @@ def _afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
 
 
 def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
-    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}")
+    nav_retour_menu = f"( {const.NAV_RETOUR_MENU} )"
+    print(f"{nav_retour_menu:^{largeur_cadre}}")
     _afficher_lignes_vides()
 
 
 def _afficher_navigation_page(page_courante: int, total_pages: int) -> int:
-    RETOUR_MENU = const.TXT_RETOUR_MENU
-    page_precedente = const.TXT_PAGE_PRECEDENTE
-    page_suivante = const.TXT_PAGE_SUIVANTE
-    page_precedente_vide = const.TXT_PAGE_PRECEDENTE_VIDE
+    RETOUR_MENU = const.NAV_RETOUR_MENU
+    page_precedente = const.NAV_PAGE_PRECEDENTE
+    page_suivante = const.NAV_PAGE_SUIVANTE
+    page_precedente_vide = const.NAV_PAGE_PRECEDENTE_VIDE
 
     if (page_courante == 1) and (page_courante == total_pages):
         print(f"{RETOUR_MENU}")
@@ -522,18 +529,19 @@ def demander_choix_menu() -> str:
     return choix
 
 
-def afficher_produit_ajoute() -> None:
-    print(const.INFO_PROD_AJOUTE)
+def afficher_produit_ajoute(nom_produit: str) -> None:
+    print(const.INFO_PROD_AJOUTE.format(nom_produit))
     _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
-def afficher_produit_modifie() -> None:
-    print(const.INFO_PROD_MODIFIE)
+def afficher_produit_modifie(nom_produit: str) -> None:
+    print(const.INFO_PROD_MODIFIE.format(nom_produit))
     _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
-def afficher_produit_non_trouve() -> None:
-    print(const.INFO_PROD_NON_TROUVE)
+def afficher_produit_non_trouve(nom_produit: str) -> None:
+    _afficher_lignes_vides()
+    print(const.INFO_PROD_NON_TROUVE.format(nom_produit))
     _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
@@ -551,9 +559,13 @@ def afficher_produit_existe(nom: str) -> None:
     print(const.CTRL_NOM_EXISTE_DEJA.format(nom))
 
 
-def afficher_suggestions(suggestions: list[str]) -> None:
+def afficher_suggestions(suggestions: list[str], nom_produit: str) -> None:
     """Affiche une liste de suggestions pour la recherche d'un produit"""
-    print(const.RECH_SUGGESTIONS)
+    suggestions_pour_produit_non_trouve = (
+        f"{const.INFO_PROD_NON_TROUVE.format(nom_produit)} "
+        f"{const.RECH_SUGGESTIONS}"
+    )
+    print(suggestions_pour_produit_non_trouve)
     for suggestion in suggestions:
         print(const.RECH_NOM_SUGGERE.format(suggestion))
     _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
@@ -561,17 +573,17 @@ def afficher_suggestions(suggestions: list[str]) -> None:
 
 def afficher_recherche_impossible() -> None:
     print(const.INFO_RECHERCHE_STOCK_VIDE)
-    _attendre_entree_retour_menu()
+    _attendre_entree_sans_message()
 
 
 def afficher_suppression_impossible() -> None:
     print(const.INFO_SUPPRESSION_STOCK_VIDE)
-    _attendre_entree_retour_menu()
+    _attendre_entree_sans_message()
 
 
 def afficher_renommage_impossible() -> None:
     print(const.INFO_RENOMMAGE_STOCK_VIDE)
-    _attendre_entree_retour_menu()
+    _attendre_entree_sans_message()
 
 
 def afficher_entete_suppression() -> None:

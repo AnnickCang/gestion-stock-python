@@ -41,13 +41,11 @@ ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE = (
 )
 
 # Aide à la navigation
-NAV_MSG_TOUCHE_ENTREE_RETOUR_MENU = (
-    "\n('Entrée' pour revenir au menu principal) "
-)
-NAV_MSG_SAISIE_VIDE_RETOUR_MENU = (
-    "(Laisser vide et appuyer sur 'Entrée' pour revenir au menu principal)"
-)
 NAV_MSG_ENTREE_POUR_CONTINUER = "\n(Appuyer sur 'Entrée' pour continuer)"
+NAV_RETOUR_MENU = "[Entrée] : retour menu principal"
+NAV_PAGE_PRECEDENTE = f"{'[p + Entrée] : précédente':26}"
+NAV_PAGE_SUIVANTE = "[s + Entrée] : suivante"
+NAV_PAGE_PRECEDENTE_VIDE = f"{' ':26}"
 # Retours de navigation dans les pages d'un tableau
 NAV_RETOUR_SEUL = 0
 NAV_RETOUR_PRECEDENT = 1
@@ -55,22 +53,22 @@ NAV_RETOUR_SUIVANT = 2
 NAV_RETOUR_PRECEDENT_SUIVANT = 3
 
 # Messages de contrôle
-CTRL_NB_POSITIF = "Veuillez entrer un nombre positif ou nul"
-CTRL_NB_VALIDE = "Veuillez entrer un nombre valide"
-CTRL_PRIX_VALIDE = "Veuillez entrer un prix valide"
-CTRL_NOM_TROP_LONG = "\tLe nom du produit ne doit pas dépasser {0} caractères"
-CTRL_NOM_EXISTE_DEJA = "'{0}' existe déjà\n"
-CTRL_REP_OUI_NON = "Veuillez répondre par 'o' ou 'n'"
+CTRL_NB_POSITIF = "Veuillez entrer un nombre positif ou nul."
+CTRL_NB_VALIDE = "Veuillez entrer un nombre valide."
+CTRL_PRIX_VALIDE = "Veuillez entrer un prix valide."
+CTRL_NOM_TROP_LONG = "\tLe nom du produit ne doit pas dépasser {0} caractères."
+CTRL_NOM_EXISTE_DEJA = "'{0}' existe déjà.\n"
+CTRL_REP_OUI_NON = "Veuillez répondre par 'o' ou 'n'."
 CTRL_REP_OUI = "O"
 CTRL_REP_NON = "N"
 CTRL_CHOIX_ENTREE_OU_P = (
-    "Choix invalide. Veuillez choisir entre 'Entrée' ou 'p + Entrée'"
+    "Choix invalide. Veuillez choisir entre 'Entrée' ou 'p + Entrée'."
 )
 CTRL_CHOIX_ENTREE_OU_S = (
-    "Choix invalide. Veuillez choisir entre 'Entrée' ou 's + Entrée'"
+    "Choix invalide. Veuillez choisir entre 'Entrée' ou 's + Entrée'."
 )
 CTRL_CHOIX_ENTREE_OU_P_OU_S = (
-    "Choix invalide. Veuillez choisir entre 'Entrée', 'p + Entrée' ou 's + Entrée'"
+    "Choix invalide. Veuillez choisir entre 'Entrée', 'p + Entrée' ou 's + Entrée'."
 )
 
 # Questions
@@ -120,7 +118,7 @@ LARGEUR_COL_NUMERO_LIGNE = 4
 COL_NUMERO_LIGNE = "n°"
 COL_PRODUIT = "produit"
 COL_QUANTITE = "quantité"
-COL_SEUIL = "seuil"
+COL_SEUIL = "seuil d'alerte"
 COL_PRIX = "prix UHT"
 COL_TOTAL = "total HT"
 NB_PRODUITS_PAR_PAGE = 10
@@ -128,21 +126,17 @@ NUMEROTATION_PAGE = "Page {0}/{1}\n"
 CHOIX_PAGE_SUIVANTE = "S"
 CHOIX_PAGE_PRECEDENTE = "P"
 CHOIX_RETOUR_MENU = ""
-TXT_RETOUR_MENU = "[Entrée] : retour menu principal"
-TXT_PAGE_PRECEDENTE = f"{'[p + Entrée] : précédente':26}"
-TXT_PAGE_SUIVANTE = "[s + Entrée] : suivante"
-TXT_PAGE_PRECEDENTE_VIDE = f"{' ':26}"
 NB_LIGNES_VIDES_SOUS_TABLEAU = 3
 
 # Labels
 LBL_NOM_PRODUIT = "Produit : "
 LBL_QUANTITE_PRODUIT = "Quantité : "
-LBL_SEUIL_PRODUIT = "Seuil : "
+LBL_SEUIL_PRODUIT = "Seuil d'alerte : "
 LBL_PRIX_PRODUIT = "Prix : "
 LBL_NOUVEAU_NOM_PRODUIT = "Nouvelle appellation de '{0}' : "
 
 # Affichage d'informations sur les produits
-INFO_PRODUIT = "'{0}' : {1} (seuil: {2}) - prix UHT: {3} €"
+INFO_PRODUIT = "'{0}' : {1} (seuil d'alerte : {2}) - prix UHT : {3} €"
 INFO_COUT_STOCK = "Total du stock : {0:0.2f} €"
 INFO_PRODUIT_MODIF_EN_COURS = "\tModification en cours de "
 INFO_PRODUIT_AJOUT_EN_COURS = "\tAjout en cours de '{0}'"
@@ -150,15 +144,15 @@ INFO_STOCK_VIDE = (
     "Aucun produit enregistré.\nPour ajouter un produit aller dans "
     "le menu 'Ajouter / modifier un produit'."
 )
-INFO_PROD_AJOUTE = "Le produit a été ajouté"
-INFO_PROD_MODIFIE = "Le produit a été modifié"
-INFO_PROD_NON_TROUVE = "\nProduit introuvable"
-INFO_PROD_SUPPRIME = "Le produit '{0}' a été supprimé"
-INFO_AUCUNE_ALERTE = "Stock OK, rien à recharger"
-INFO_PROD_RENOMME = "\nLe produit '{0}' a été renommé en '{1}'"
-INFO_RECHERCHE_STOCK_VIDE = "Le stock est vide : recherche impossible"
-INFO_SUPPRESSION_STOCK_VIDE = "Le stock est vide : suppression impossible"
-INFO_RENOMMAGE_STOCK_VIDE = "Le stock est vide : renommage impossible"
+INFO_PROD_AJOUTE = "Le produit '{0}' a été ajouté."
+INFO_PROD_MODIFIE = "Le produit '{0}' a été modifié."
+INFO_PROD_NON_TROUVE = "Le produit '{0}' est introuvable."
+INFO_PROD_SUPPRIME = "Le produit '{0}' a été supprimé."
+INFO_AUCUNE_ALERTE = "Stock OK, rien à recharger."
+INFO_PROD_RENOMME = "\nLe produit '{0}' a été renommé en '{1}'."
+INFO_RECHERCHE_STOCK_VIDE = "Le stock est vide : recherche impossible."
+INFO_SUPPRESSION_STOCK_VIDE = "Le stock est vide : suppression impossible."
+INFO_RENOMMAGE_STOCK_VIDE = "Le stock est vide : renommage impossible."
 
 
 # Gestion des anomalies dans le fichier de données
@@ -174,33 +168,33 @@ ANO_MSG_NOUVEAU_FICHIER_STOCK = (
     "modification ou suppression d'un produit.".format(FICHIER_STOCK)
 )
 NO_ANO = "Produit OK"
-ANO_NOM_INEXISTANT = "Pas de champ '{0}', le produit sera ignoré".format(CLE_NOM)
-ANO_NOM_VIDE = "Le champ '{0}' est vide, le produit sera ignoré".format(CLE_NOM)
-ANO_NOM_DOUBLON = "Le produit '{0}' existe déjà dans le stock, il sera ignoré"
+ANO_NOM_INEXISTANT = "Pas de champ '{0}', le produit sera ignoré.".format(CLE_NOM)
+ANO_NOM_VIDE = "Le champ '{0}' est vide, le produit sera ignoré.".format(CLE_NOM)
+ANO_NOM_DOUBLON = "Le produit '{0}' existe déjà dans le stock, il sera ignoré."
 ANO_CHAMP_PAS_STR = (
     "Le champ '{0}' n'est pas une chaîne de caractères, "
-    "le produit sera ignoré"
+    "le produit sera ignoré."
 )
-ANO_CHAMP_TROP_LONG = "Le champ '{0}' dépasse {1} caractères, il sera tronqué"
+ANO_CHAMP_TROP_LONG = "Le champ '{0}' dépasse {1} caractères, il sera tronqué."
 ANO_NO_PRODUIT = "Produit n°{0} : "
 ANO_CHAMP_NUM_CONV_ENTIER_OU_FLOTTANT = (
-    "Le champ '{0}' a été converti en '{1}', sa valeur peut être tronquée"
+    "Le champ '{0}' a été converti en '{1}', sa valeur peut être tronquée."
 )
 ANO_CHAMP_NUM_CONV_VAL = (
-    "Le champ '{0}' a été converti en nombre avec la valeur '{1}'"
+    "Le champ '{0}' a été converti en nombre avec la valeur '{1}'."
 )
 ANO_CHAMP_NUM_CONV_ZERO = (
-    "Le champ '{0}' a été converti en nombre avec une valeur à 0"
+    "Le champ '{0}' a été converti en nombre avec une valeur à 0."
 )
 ANO_CHAMP_NUM_INEXISTANT = (
-    "Le champ '{0}' n'existe pas et a été créé avec une valeur à 0"
+    "Le champ '{0}' n'existe pas et a été créé avec une valeur à 0."
 )
-ANO_PRODUIT_STRUCTURE_INVALIDE = "Produit invalide, le produit sera ignoré"
+ANO_PRODUIT_STRUCTURE_INVALIDE = "Produit invalide, le produit sera ignoré."
 
 # Suggestions de recherche
 RECH_NB_ELEMENTS_RETOUR = 5
 RECH_SEUIL_SIMILARITE = 0.5 # de 0.0 (très permissif) à 1.0 (strictement identique)
-RECH_SUGGESTIONS = "Ce produit est introuvable. Suggestions possibles :"
+RECH_SUGGESTIONS = "Suggestions possibles :"
 RECH_NOM_SUGGERE = "- {0}"
 
 # Formatage de texte
