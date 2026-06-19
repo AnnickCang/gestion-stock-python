@@ -55,25 +55,29 @@ Les données sont stockées sous forme d'une liste de dictionnaires :
 ## Aperçus de l'interface
 ```text
                     --- ETAT DU STOCK ---                    
--------------------------------------------------------------
-|   n° | produit         |        quantité |           seuil |
--------------------------------------------------------------
-|    1 | Abricot         |               5 |               3 |
-|    2 | Banane          |               5 |               2 |
-|    3 | Bonbon cola     |              30 |               5 |
-|    4 | Bonbon Tagada   |              25 |              10 |
-|    5 | Café            |               8 |               2 |
-|    6 | Cherry coke     |               6 |               3 |
-|    7 | coca cola       |               3 |               2 |
-|    8 | concombre       |               5 |               2 |
-|    9 | Fanta           |               2 |               1 |
-|   10 | Fraise Tagada   |              25 |               5 |
--------------------------------------------------------------
-Page 1/3
 
-[Entrée] : retour menu principal -                            - [s + Entrée] : suivante
+-------------------------------------------------------------
+|   n° | produit         |        quantité |  seuil d'alerte |
+-------------------------------------------------------------
+|    1 | Fraise Tagada   |               2 |               5 |
+|    2 | jus d'orange    |               0 |               0 |
+|    3 | lait de coco    |               5 |               2 |
+|    4 | noix de coco    |               3 |               1 |
+|    5 | orange          |               3 |               1 |
+|    6 | orange sanguine |               2 |               1 |
+|    7 | orangeade       |               3 |               1 |
+|    8 | orangina        |              30 |               5 |
+|    9 | Pepsi Cola      |              10 |               3 |
+|   10 | Pepsi orange    |               4 |               2 |
+-------------------------------------------------------------
 
-Choix :  
+
+
+Page 2/3
+
+[Entrée] : retour menu principal - [p + Entrée] : précédente  - [s + Entrée] : suivante
+
+Choix : 
 ```
 ![Inventaire avec valeurs en rouge](images/inventaire.png)
 
@@ -127,8 +131,11 @@ Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience
 - ajout d'une colonne en première position pour indiquer le numéro de ligne
 - gestion de la pagination pour l'affichage du stock, des alertes et de l'inventaire (ex: 10 produits par page)
 - amélioration de l'affichage (centrage, espacements, clarté des messages)
+- implémentation de suggestions de noms de produits lors de la suppression ou du renommage
 - création d'un fichier imprimable pour le stock, les alertes et l'inventaire
+- revue des noms de fonctions
 - amélioration du typage statique et de la robustesse du code
+- enregistrement des anomalies dans un fichier texte
 - gestion des clés inutilisées dans le fichier JSON (état actuel : supprimées silencieusement lors d'une sauvegarde) : afficher un warning
 - version bilingue du fichier `README.md`
 - traduction en anglais des commentaires du fichier `.gitignore`
