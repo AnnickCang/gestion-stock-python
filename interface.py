@@ -16,10 +16,13 @@ LARGEUR_CADRE = const.LARGEUR_CADRE
 LARGEUR_CADRE_INVENTAIRE = const.LARGEUR_CADRE_INVENTAIRE
 TIRET_CADRE = const.TIRET_CADRE
 NB_PRODUITS_PAR_PAGE = const.NB_PRODUITS_PAR_PAGE
+NB_LIGNES_VIDES_SOUS_TABLEAU = const.NB_LIGNES_VIDES_SOUS_TABLEAU
+NB_LIGNES_VIDES_INTER_ACTION = const.NB_LIGNES_VIDES_INTER_ACTION
 
 
-def _afficher_separateur() -> None:
-    print()
+def _afficher_lignes_vides(nb_lignes: int = 1) -> None:
+    for _ in range(nb_lignes):
+        print()
 
 
 def _afficher_bordure_cadre(largeur_cadre: int) -> None:
@@ -140,7 +143,8 @@ def _afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
 
 
 def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
-    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}\n")
+    print(f"{const.NAV_MSG_SAISIE_VIDE_RETOUR_MENU:^{largeur_cadre}}")
+    _afficher_lignes_vides()
 
 
 def _afficher_navigation_page(page_courante: int, total_pages: int) -> int:
@@ -184,6 +188,14 @@ def _mettre_a_jour_page_courante(
             return page_courante + 1
         case const.CHOIX_RETOUR_MENU:
             return None
+
+
+def _completer_sous_tableau_avec_lignes_vides(
+    condition: bool,
+    nb_lignes_vides: int
+) -> None:
+    if condition:
+        _afficher_lignes_vides(nb_lignes_vides)
 
 
 def _mettre_en_rouge(texte: str, condition: bool) -> str:
@@ -268,17 +280,17 @@ def demander_nouveau_nom(ancien_nom: str) -> str | None:
 
 def demander_confirmation_suppression(nom_produit: str) -> bool:
     while True:
+        _afficher_lignes_vides()
         question = const.QST_SUPPRESSION.format(nom_produit)
         entree_utilisateur = input(question).strip()
         match entree_utilisateur.capitalize():
             case const.CTRL_REP_OUI:
                 return True
             case const.CTRL_REP_NON:
-                _afficher_separateur()
+                _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
                 return False
-        _afficher_separateur()
+        _afficher_lignes_vides()
         print(const.CTRL_REP_OUI_NON)
-        _afficher_separateur()
 
 
 def afficher_stock(stock: list[types_structure.Produit]) -> None:
@@ -287,6 +299,7 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
     
     if not stock:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_lignes_vides()
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
@@ -298,6 +311,7 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
 
     while True:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_lignes_vides()
 
         _afficher_nom_colonnes_stock_et_alertes()
         for numero, produit in enumerate(stock[debut:fin], start=1):
@@ -312,6 +326,12 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
             print(f"| {no_ligne} | {nom} | {quantite} | {seuil} |")
         _afficher_bordure_cadre(LARGEUR_CADRE)
 
+        _completer_sous_tableau_avec_lignes_vides(
+            page_courante == total_pages,
+            NB_PRODUITS_PAR_PAGE - int(no_ligne)
+        )
+
+        _afficher_lignes_vides(NB_LIGNES_VIDES_SOUS_TABLEAU)
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
         choix_navigation = _afficher_navigation_page(page_courante, total_pages)
@@ -335,12 +355,14 @@ def afficher_alertes(
     
     if not stock:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_lignes_vides()
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
     
     if not alertes:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_lignes_vides()
         print(const.INFO_AUCUNE_ALERTE)
         _attendre_entree_retour_menu()
         return
@@ -352,6 +374,7 @@ def afficher_alertes(
 
     while True:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_lignes_vides()
 
         _afficher_nom_colonnes_stock_et_alertes()
         for no_ligne, produit in enumerate(alertes[debut:fin], start=1):
@@ -362,6 +385,12 @@ def afficher_alertes(
             )
         _afficher_bordure_cadre(LARGEUR_CADRE)
 
+        _completer_sous_tableau_avec_lignes_vides(
+            page_courante == total_pages,
+            NB_PRODUITS_PAR_PAGE - int(no_ligne)
+        )
+
+        _afficher_lignes_vides(NB_LIGNES_VIDES_SOUS_TABLEAU)
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
         choix_navigation = _afficher_navigation_page(page_courante, total_pages)
@@ -379,7 +408,7 @@ def afficher_info_produit(produit: types_structure.Produit) -> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
     nom, quantite, seuil, prix = _formater_infos_produit(produit)
     print(const.INFO_PRODUIT.format(nom, quantite, seuil, prix))
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
         
 
 def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
@@ -390,6 +419,7 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     
     if not stock:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+        _afficher_lignes_vides()
         _afficher_stock_vide()
         _attendre_entree_retour_menu()
         return
@@ -406,6 +436,8 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
 
     while True:
         _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+        _afficher_lignes_vides()
+
         _afficher_nom_colonnes_inventaire()
         for numero, produit in enumerate(stock[debut:fin], start=1):
             no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
@@ -422,8 +454,14 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
         _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
 
         if page_courante == total_pages:
+            _completer_sous_tableau_avec_lignes_vides(
+                True,
+                NB_PRODUITS_PAR_PAGE - int(no_ligne)
+            )
             texte_total_stock = const.INFO_COUT_STOCK.format(cout_total_stock)
             print(f"\n{texte_total_stock:>{LARGEUR_CADRE_INVENTAIRE}}\n")
+        else:
+            _afficher_lignes_vides(NB_LIGNES_VIDES_SOUS_TABLEAU)
 
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
@@ -466,7 +504,8 @@ def afficher_anomalies_fichier(anomalies: list[str]) -> None:
 def demander_choix_menu() -> str:
     """Affiche le menu principal et renvoie le choix de l'utilisateur"""
 
-    print(f"{const.TITRE_MENU_PRINCIPAL:^{LARGEUR_CADRE}}\n")
+    print(f"{const.TITRE_MENU_PRINCIPAL:^{LARGEUR_CADRE}}")
+    _afficher_lignes_vides()
     print(const.MENUP_SM_STOCK)
     print(const.MENUP_SM_ALERTES)
     print(const.MENUP_SM_AJOUT_MODIF)
@@ -485,27 +524,27 @@ def demander_choix_menu() -> str:
 
 def afficher_produit_ajoute() -> None:
     print(const.INFO_PROD_AJOUTE)
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_produit_modifie() -> None:
     print(const.INFO_PROD_MODIFIE)
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_produit_non_trouve() -> None:
     print(const.INFO_PROD_NON_TROUVE)
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_produit_supprime(nom_produit: str) -> None:
     print(const.INFO_PROD_SUPPRIME.format(nom_produit))
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_produit_renomme(ancien_nom: str, nouveau_nom: str) -> None:
     print(const.INFO_PROD_RENOMME.format(ancien_nom, nouveau_nom))
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_produit_existe(nom: str) -> None:
@@ -517,7 +556,7 @@ def afficher_suggestions(suggestions: list[str]) -> None:
     print(const.RECH_SUGGESTIONS)
     for suggestion in suggestions:
         print(const.RECH_NOM_SUGGERE.format(suggestion))
-    _afficher_separateur()
+    _afficher_lignes_vides(NB_LIGNES_VIDES_INTER_ACTION)
 
 
 def afficher_recherche_impossible() -> None:
