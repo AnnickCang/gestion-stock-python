@@ -24,14 +24,14 @@ def _gerer_ajout_modification(stock: list[types_structure.Produit]) -> None:
             if donnees_produit is None:
                 break
             gs.ajouter_produit(stock, nom_produit, **donnees_produit)
-            ifc.afficher_produit_ajoute()
+            ifc.afficher_produit_ajoute(nom_produit)
             continue
 
         donnees_produit = ifc.demander_info_produit(produit)
         if donnees_produit is None:
             break
         gs.modifier_produit(stock, produit, **donnees_produit)
-        ifc.afficher_produit_modifie()
+        ifc.afficher_produit_modifie(nom_produit)
 
 
 def _gerer_suppression(stock: list[types_structure.Produit]) -> None:
@@ -48,7 +48,7 @@ def _gerer_suppression(stock: list[types_structure.Produit]) -> None:
         
         produit = gs.trouver_produit(stock, nom_produit)
         if produit is None:
-            ifc.afficher_produit_non_trouve()
+            ifc.afficher_produit_non_trouve(nom_produit)
             continue
 
         nom_produit_a_supprimer = produit[CLE_NOM]
@@ -76,10 +76,10 @@ def _gerer_recherche(stock: list[types_structure.Produit]) -> None:
 
         suggestions = sp.suggerer_produits(stock, nom_recherche)
         if suggestions:
-            ifc.afficher_suggestions(suggestions)
+            ifc.afficher_suggestions(suggestions, nom_recherche)
             continue
 
-        ifc.afficher_produit_non_trouve()
+        ifc.afficher_produit_non_trouve(nom_recherche)
 
 
 def _gerer_renommage(stock: list[types_structure.Produit]) -> None:
@@ -96,7 +96,7 @@ def _gerer_renommage(stock: list[types_structure.Produit]) -> None:
         
         produit = gs.trouver_produit(stock, nom_produit)
         if produit is None:
-            ifc.afficher_produit_non_trouve()
+            ifc.afficher_produit_non_trouve(nom_produit)
             continue
 
         retour_menu_principal = False
