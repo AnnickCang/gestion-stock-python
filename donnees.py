@@ -24,7 +24,7 @@ def _verifier_structure_stock(stock: object) -> int:
     return const.NO_ERR
 
 
-def _verifier_champ_entier(
+def _extraire_champ_entier_valide(
     produit: dict[str, object],
     champ: str
 ) -> tuple[int, str]:
@@ -79,7 +79,7 @@ def _verifier_champ_entier(
     return entier_valide, msg_converti_a_zero
 
 
-def _verifier_champ_flottant(
+def _extraire_champ_flottant_valide(
     produit: dict[str, object],
     champ: str
 ) -> tuple[float, str]:
@@ -133,7 +133,7 @@ def _verifier_champ_flottant(
     return flottant_valide, msg_converti_a_zero
 
 
-def _verifier_et_nettoyer_nom_produit(
+def _extraire_nom_produit_valide(
     produit: dict[str, object]
 ) -> tuple[str | None, list[str]]:
     """Vérifie et renvoie un nom valide ou None avec la liste des warnings associés"""
@@ -165,7 +165,7 @@ def _verifier_et_nettoyer_nom_produit(
     return nom_strip, anomalies_nom
 
 
-def _verifier_et_nettoyer_champs_numeriques(
+def _extraire_champs_numeriques_valides(
     produit: dict[str, object]
 ) -> tuple[types_structure.ChampsNumeriquesProduit, list[str]]:
     """Vérifie et renvoie les champs numériques avec une valeur valide ou 0
@@ -173,13 +173,13 @@ def _verifier_et_nettoyer_champs_numeriques(
     
     champs_numeriques_anomalies = []
 
-    quantite, msg_anomalie = _verifier_champ_entier(produit, CLE_QUANTITE)
+    quantite, msg_anomalie = _extraire_champ_entier_valide(produit, CLE_QUANTITE)
     if msg_anomalie != "":
         champs_numeriques_anomalies.append(msg_anomalie)
-    seuil, msg_anomalie = _verifier_champ_entier(produit, CLE_SEUIL)
+    seuil, msg_anomalie = _extraire_champ_entier_valide(produit, CLE_SEUIL)
     if msg_anomalie != "":
         champs_numeriques_anomalies.append(msg_anomalie)
-    prix, msg_anomalie = _verifier_champ_flottant(produit, CLE_PRIX)
+    prix, msg_anomalie = _extraire_champ_flottant_valide(produit, CLE_PRIX)
     if msg_anomalie != "":
         champs_numeriques_anomalies.append(msg_anomalie)
 
@@ -191,7 +191,7 @@ def _verifier_et_nettoyer_champs_numeriques(
     return champs_numeriques_produit, champs_numeriques_anomalies
 
 
-def _verifier_et_nettoyer_produit(
+def _extraire_produit_valide(
     produit: object
 ) -> tuple[types_structure.Produit | None, list[str]]:
     """Vérifie et retourne un produit avec des clés et valeurs valides ou None
@@ -204,12 +204,12 @@ def _verifier_et_nettoyer_produit(
         return None, produit_anomalies
      
     produit_dict: dict[str, object] = produit
-    nom_nettoye, nom_anomalies = _verifier_et_nettoyer_nom_produit(produit_dict)
+    nom_nettoye, nom_anomalies = _extraire_nom_produit_valide(produit_dict)
     produit_anomalies.extend(nom_anomalies)
     if nom_nettoye is None:
         return None, produit_anomalies
     
-    numeriques_valides, anomalies_numeriques = _verifier_et_nettoyer_champs_numeriques(produit_dict)
+    numeriques_valides, anomalies_numeriques = _extraire_champs_numeriques_valides(produit_dict)
     produit_anomalies.extend(anomalies_numeriques)
     
     produit_nettoye: types_structure.Produit = {
@@ -221,7 +221,7 @@ def _verifier_et_nettoyer_produit(
     return produit_nettoye, produit_anomalies
 
 
-def _verifier_contenu_stock(
+def _extraire_stock_valide(
     stock: list[object]
 ) -> tuple[list[types_structure.Produit], list[str]]:
     """Renvoie un stock avec des produits vérifiés, nettoyés et sans doublons
@@ -232,7 +232,7 @@ def _verifier_contenu_stock(
     cles_noms_deja_vus: set[str] = set()
 
     for no_produit, produit in enumerate(stock, start=1):
-        produit_nettoye, msgs_anomalies = _verifier_et_nettoyer_produit(produit)
+        produit_nettoye, msgs_anomalies = _extraire_produit_valide(produit)
         
         if produit_nettoye is not None:
             nom_normalise = norm(produit_nettoye[CLE_NOM])
@@ -260,7 +260,7 @@ def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
             if _verifier_structure_stock(stock) == const.ERR_STOCK_PAS_UNE_LISTE:
                 return const.ERR_STOCK_PAS_UNE_LISTE, [], []
 
-            stock_nettoye, anomalies = _verifier_contenu_stock(stock)
+            stock_nettoye, anomalies = _extraire_stock_valide(stock)
 
             trier_stock(stock_nettoye)
 

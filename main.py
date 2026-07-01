@@ -102,7 +102,7 @@ def _gerer_renommage(stock: list[types_structure.Produit]) -> None:
         retour_menu_principal = False
         while True:
             ancien_nom = produit[CLE_NOM]
-            nouveau_nom = ifc.demander_nouveau_nom(ancien_nom)
+            nouveau_nom = ifc.demander_nouveau_nom_produit(ancien_nom)
             if nouveau_nom is None:
                 retour_menu_principal = True
                 break
@@ -124,7 +124,7 @@ def main():
     code_err, stock, anomalies_du_fichier = donnees.charger_stock()
 
     if code_err != const.NO_ERR:
-        ifc.afficher_erreur(code_err)
+        ifc.afficher_erreur_fichier(code_err)
     
     if anomalies_du_fichier:
         ifc.afficher_anomalies_fichier(anomalies_du_fichier)
@@ -132,7 +132,7 @@ def main():
     continuer = True
     while continuer:
         ifc.effacer_ecran_terminal()
-        choix_menu = ifc.demander_choix_menu()
+        choix_menu = ifc.afficher_et_demander_choix_menu()
 
         ifc.effacer_ecran_terminal()
         match choix_menu.capitalize():
