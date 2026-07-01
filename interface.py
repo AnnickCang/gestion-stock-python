@@ -25,7 +25,7 @@ def _afficher_lignes_vides(nb_lignes: int = 1) -> None:
         print()
 
 
-def _afficher_bordure_cadre(largeur_cadre: int) -> None:
+def _afficher_bordure_horizontale(largeur_cadre: int) -> None:
     print(TIRET_CADRE * largeur_cadre)
 
 
@@ -33,16 +33,16 @@ def _afficher_stock_vide() -> None:
     print(const.INFO_STOCK_VIDE)
 
 
-def _attendre_entree_sans_message() -> None:
+def _attendre_touche_entree() -> None:
     _afficher_lignes_vides()
     input()
 
 
-def _attendre_entree_utilisateur() -> None:
+def _attendre_touche_entree_avec_message() -> None:
     input(const.NAV_MSG_ENTREE_POUR_CONTINUER)
 
 
-def _attendre_entree_retour_menu() -> None:
+def _attendre_touche_entree_pour_retour_menu() -> None:
     _afficher_lignes_vides()
     input(const.NAV_RETOUR_MENU)
 
@@ -75,24 +75,24 @@ def _attendre_choix_navigation_page(choix_possible: int) -> str:
 
 
 def _afficher_nom_colonnes_stock_et_alertes() -> None:
-    _afficher_bordure_cadre(LARGEUR_CADRE)
+    _afficher_bordure_horizontale(LARGEUR_CADRE)
     print(f"| {const.COL_NUMERO_LIGNE:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
           f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
           f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
           f"| {const.COL_SEUIL:>{LARGEUR_COL}} |"
     )
-    _afficher_bordure_cadre(LARGEUR_CADRE)
+    _afficher_bordure_horizontale(LARGEUR_CADRE)
 
 
 def _afficher_nom_colonnes_inventaire() -> None:
-    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+    _afficher_bordure_horizontale(LARGEUR_CADRE_INVENTAIRE)
     print(f"| {const.COL_NUMERO_LIGNE:>{const.LARGEUR_COL_NUMERO_LIGNE}} "
           f"| {const.COL_PRODUIT:{LARGEUR_COL}} "
           f"| {const.COL_QUANTITE:>{LARGEUR_COL}} "
           f"| {const.COL_PRIX:>{LARGEUR_COL}} "
           f"| {const.COL_TOTAL:>{LARGEUR_COL}} |"
     )
-    _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+    _afficher_bordure_horizontale(LARGEUR_CADRE_INVENTAIRE)
 
 
 def _demander_retour_menu() -> bool:
@@ -106,7 +106,7 @@ def _demander_retour_menu() -> bool:
         print(const.CTRL_REP_OUI_NON)
 
 
-def _demander_entier(message: str) -> int | None:
+def _demander_entier_positif(message: str) -> int | None:
     """Renvoie l'entrée utilisateur après l'avoir convertie en entier
     ou None (si champ vide avec validation retour au menu principal)"""
     while True:
@@ -125,7 +125,7 @@ def _demander_entier(message: str) -> int | None:
             print(const.CTRL_NB_VALIDE)
 
 
-def _demander_flottant(message: str) -> float | None:
+def _demander_flottant_positif(message: str) -> float | None:
     """Renvoie l'entrée utilisateur après l'avoir convertie en float
     ou None (si champ vide avec validation retour au menu principal)"""
     while True:
@@ -144,17 +144,17 @@ def _demander_flottant(message: str) -> float | None:
             print(const.CTRL_NB_VALIDE)
 
 
-def _afficher_titre_sous_menu(titre: str, largeur_cadre: int) -> None:
+def _afficher_titre_de_sous_menu(titre: str, largeur_cadre: int) -> None:
     print(f"{titre:^{largeur_cadre}}")
 
 
-def _afficher_saisie_vide_retour_menu(largeur_cadre: int) -> None:
+def _afficher_entree_pour_retour_menu(largeur_cadre: int) -> None:
     nav_retour_menu = f"( {const.NAV_RETOUR_MENU} )"
     print(f"{nav_retour_menu:^{largeur_cadre}}")
     _afficher_lignes_vides()
 
 
-def _afficher_navigation_page(page_courante: int, total_pages: int) -> int:
+def _afficher_aide_navigation_page(page_courante: int, total_pages: int) -> int:
     RETOUR_MENU = const.NAV_RETOUR_MENU
     page_precedente = const.NAV_PAGE_PRECEDENTE
     page_suivante = const.NAV_PAGE_SUIVANTE
@@ -205,23 +205,23 @@ def _completer_sous_tableau_avec_lignes_vides(
         _afficher_lignes_vides(nb_lignes_vides)
 
 
-def _mettre_en_rouge(texte: str, condition: bool) -> str:
+def _formater_texte_en_rouge(texte: str, condition: bool) -> str:
     if condition:
         return f"{const.FORMAT_ROUGE}{texte}{const.FORMAT_RESET}"
     return texte
 
 
-def _formater_infos_produit(
+def _formater_info_produit(
     produit: types_structure.Produit
 ) -> tuple[str, str, str, str]:
     nom = produit[CLE_NOM]
-    quantite = _mettre_en_rouge(
+    quantite = _formater_texte_en_rouge(
         str(produit[CLE_QUANTITE]),
         verifier_quantite_sous_seuil(produit)
     )
     seuil = str(produit[CLE_SEUIL])
     prix = f"{produit[CLE_PRIX]:.2f}"
-    prix = _mettre_en_rouge(prix, verifier_prix_nul(produit))
+    prix = _formater_texte_en_rouge(prix, verifier_prix_nul(produit))
 
     return nom, quantite, seuil, prix
 
@@ -239,19 +239,19 @@ def demander_info_produit(
     if produit is None:
         print(const.INFO_PRODUIT_AJOUT_EN_COURS.format(nom_produit))
     else:
-        nom, quantite, seuil, prix = _formater_infos_produit(produit)
+        nom, quantite, seuil, prix = _formater_info_produit(produit)
         infos_produit = const.INFO_PRODUIT.format(nom, quantite, seuil, prix)
         print(const.INFO_PRODUIT_MODIF_EN_COURS, infos_produit, sep='')
 
-    quantite = _demander_entier(const.LBL_QUANTITE_PRODUIT)
+    quantite = _demander_entier_positif(const.LBL_QUANTITE_PRODUIT)
     if quantite is None:
         return None
     
-    seuil = _demander_entier(const.LBL_SEUIL_PRODUIT)
+    seuil = _demander_entier_positif(const.LBL_SEUIL_PRODUIT)
     if seuil is None:
         return None
     
-    prix = _demander_flottant(const.LBL_PRIX_PRODUIT)
+    prix = _demander_flottant_positif(const.LBL_PRIX_PRODUIT)
     if prix is None:
         return None
     
@@ -275,7 +275,7 @@ def demander_nom_produit(message: str) -> str | None:
         return nom
 
 
-def demander_nouveau_nom(ancien_nom: str) -> str | None:
+def demander_nouveau_nom_produit(ancien_nom: str) -> str | None:
     nouveau_nom = demander_nom_produit(
         const.LBL_NOUVEAU_NOM_PRODUIT.format(ancien_nom)
     )
@@ -305,10 +305,10 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
     titre = const.TITRE_SMENU_STOCK
     
     if not stock:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
         _afficher_lignes_vides()
         _afficher_stock_vide()
-        _attendre_entree_retour_menu()
+        _attendre_touche_entree_pour_retour_menu()
         return
     
     debut = 0
@@ -317,7 +317,7 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
     total_pages = _calculer_total_pages(stock)
 
     while True:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
         _afficher_lignes_vides()
 
         _afficher_nom_colonnes_stock_et_alertes()
@@ -325,13 +325,13 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
             no_ligne = f"{numero:>{const.LARGEUR_COL_NUMERO_LIGNE}}"
             nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
             quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
-            quantite = _mettre_en_rouge(
+            quantite = _formater_texte_en_rouge(
                 quantite,
                 verifier_quantite_sous_seuil(produit)
             )
             seuil = f"{produit[CLE_SEUIL]:>{LARGEUR_COL}}"
             print(f"| {no_ligne} | {nom} | {quantite} | {seuil} |")
-        _afficher_bordure_cadre(LARGEUR_CADRE)
+        _afficher_bordure_horizontale(LARGEUR_CADRE)
 
         _completer_sous_tableau_avec_lignes_vides(
             page_courante == total_pages,
@@ -341,7 +341,7 @@ def afficher_stock(stock: list[types_structure.Produit]) -> None:
         _afficher_lignes_vides(NB_LIGNES_VIDES_SOUS_TABLEAU)
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
-        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        choix_navigation = _afficher_aide_navigation_page(page_courante, total_pages)
         page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
         if page_courante is None:
             break
@@ -361,17 +361,17 @@ def afficher_alertes(
     titre = const.TITRE_SMENU_ALERTES
     
     if not stock:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
         _afficher_lignes_vides()
         _afficher_stock_vide()
-        _attendre_entree_retour_menu()
+        _attendre_touche_entree_pour_retour_menu()
         return
     
     if not alertes:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
         _afficher_lignes_vides()
         print(const.INFO_AUCUNE_ALERTE)
-        _attendre_entree_retour_menu()
+        _attendre_touche_entree_pour_retour_menu()
         return
     
     debut = 0
@@ -380,7 +380,7 @@ def afficher_alertes(
     total_pages = _calculer_total_pages(alertes)
 
     while True:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
         _afficher_lignes_vides()
 
         _afficher_nom_colonnes_stock_et_alertes()
@@ -390,7 +390,7 @@ def afficher_alertes(
                 f"| {produit[CLE_QUANTITE]:>{LARGEUR_COL}} "
                 f"| {produit[CLE_SEUIL]:>{LARGEUR_COL}} |"
             )
-        _afficher_bordure_cadre(LARGEUR_CADRE)
+        _afficher_bordure_horizontale(LARGEUR_CADRE)
 
         _completer_sous_tableau_avec_lignes_vides(
             page_courante == total_pages,
@@ -400,7 +400,7 @@ def afficher_alertes(
         _afficher_lignes_vides(NB_LIGNES_VIDES_SOUS_TABLEAU)
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
-        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        choix_navigation = _afficher_aide_navigation_page(page_courante, total_pages)
         page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
         if page_courante is None:
             break
@@ -413,7 +413,7 @@ def afficher_alertes(
 
 def afficher_info_produit(produit: types_structure.Produit) -> None:
     """Affiche les données relatives au produit recherché s'il a été trouvé"""
-    nom, quantite, seuil, prix = _formater_infos_produit(produit)
+    nom, quantite, seuil, prix = _formater_info_produit(produit)
     _afficher_lignes_vides()
     print(f"{const.LBL_NOM_PRODUIT}{nom}")
     print(f"{const.LBL_QUANTITE_PRODUIT}{quantite}")
@@ -429,10 +429,10 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     titre = const.TITRE_SMENU_INVENTAIRE + jour + " ---"
     
     if not stock:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
         _afficher_lignes_vides()
         _afficher_stock_vide()
-        _attendre_entree_retour_menu()
+        _attendre_touche_entree_pour_retour_menu()
         return
     
     cout_total_stock = sum(
@@ -446,7 +446,7 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
     total_pages = _calculer_total_pages(stock)
 
     while True:
-        _afficher_titre_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
+        _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE_INVENTAIRE)
         _afficher_lignes_vides()
 
         _afficher_nom_colonnes_inventaire()
@@ -456,13 +456,13 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
             nom = f"{produit[CLE_NOM]:{LARGEUR_COL}}"
             quantite = f"{produit[CLE_QUANTITE]:>{LARGEUR_COL}}"
             prix = f"{produit[CLE_PRIX]:>{LARGEUR_COL}.2f}"
-            prix = _mettre_en_rouge(
+            prix = _formater_texte_en_rouge(
                 prix,
                 verifier_prix_nul(produit)
             )
             cout_total = f"{cout_total_produit:>{LARGEUR_COL}.2f}"
             print(f"| {no_ligne} | {nom} | {quantite} | {prix} | {cout_total} |")
-        _afficher_bordure_cadre(LARGEUR_CADRE_INVENTAIRE)
+        _afficher_bordure_horizontale(LARGEUR_CADRE_INVENTAIRE)
 
         if page_courante == total_pages:
             _completer_sous_tableau_avec_lignes_vides(
@@ -476,7 +476,7 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
 
         print(const.NUMEROTATION_PAGE.format(page_courante, total_pages))
 
-        choix_navigation = _afficher_navigation_page(page_courante, total_pages)
+        choix_navigation = _afficher_aide_navigation_page(page_courante, total_pages)
         page_courante = _mettre_a_jour_page_courante(choix_navigation, page_courante)
         if page_courante is None:
             break
@@ -487,7 +487,7 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
         effacer_ecran_terminal()
 
 
-def afficher_erreur(code_err: int) -> None:
+def afficher_erreur_fichier(code_err: int) -> None:
     match code_err:
         case const.ERR_FILE_NOT_FOUND:
             print(const.ERR_MSG_FICHIER_STOCK_ABSENT)
@@ -500,7 +500,7 @@ def afficher_erreur(code_err: int) -> None:
             print(const.ERR_MSG_FICHIER_STRUCTURE_LISTE_OBLIGATOIRE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
-    _attendre_entree_utilisateur()
+    _attendre_touche_entree_avec_message()
 
 
 def afficher_anomalies_fichier(anomalies: list[str]) -> None:
@@ -509,10 +509,10 @@ def afficher_anomalies_fichier(anomalies: list[str]) -> None:
         print(anomalie)
     print(const.ANO_MSG_NOUVEAU_FICHIER_STOCK)
     print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
-    _attendre_entree_utilisateur()
+    _attendre_touche_entree_avec_message()
 
 
-def demander_choix_menu() -> str:
+def afficher_et_demander_choix_menu() -> str:
     """Affiche le menu principal et renvoie le choix de l'utilisateur"""
 
     print(f"{const.TITRE_MENU_PRINCIPAL:^{LARGEUR_CADRE}}")
@@ -577,38 +577,38 @@ def afficher_suggestions(suggestions: list[str], nom_produit: str) -> None:
 
 def afficher_recherche_impossible() -> None:
     print(const.INFO_RECHERCHE_STOCK_VIDE)
-    _attendre_entree_sans_message()
+    _attendre_touche_entree()
 
 
 def afficher_suppression_impossible() -> None:
     print(const.INFO_SUPPRESSION_STOCK_VIDE)
-    _attendre_entree_sans_message()
+    _attendre_touche_entree()
 
 
 def afficher_renommage_impossible() -> None:
     print(const.INFO_RENOMMAGE_STOCK_VIDE)
-    _attendre_entree_sans_message()
+    _attendre_touche_entree()
 
 
 def afficher_entete_suppression() -> None:
     titre = const.TITRE_SMENU_SUPPRESSION
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+    _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_entree_pour_retour_menu(LARGEUR_CADRE)
 
 
 def afficher_entete_recherche() -> None:
     titre = const.TITRE_SMENU_RECHERCHE
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+    _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_entree_pour_retour_menu(LARGEUR_CADRE)
 
 
 def afficher_entete_renommage() -> None:
     titre = const.TITRE_SMENU_RENOMMAGE
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+    _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_entree_pour_retour_menu(LARGEUR_CADRE)
 
 
 def afficher_entete_ajout_modification() -> None:
     titre = const.TITRE_SMENU_AJOUT_MODIF
-    _afficher_titre_sous_menu(titre, LARGEUR_CADRE)
-    _afficher_saisie_vide_retour_menu(LARGEUR_CADRE)
+    _afficher_titre_de_sous_menu(titre, LARGEUR_CADRE)
+    _afficher_entree_pour_retour_menu(LARGEUR_CADRE)
