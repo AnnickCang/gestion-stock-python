@@ -11,11 +11,6 @@ CLE_SEUIL = const.CLE_SEUIL
 CLE_PRIX = const.CLE_PRIX
 
 
-def trier_stock(stock: list[types_structure.Produit]) -> None:
-    """Trie le stock par nom de produit"""
-    stock.sort(key=lambda item: norm(item[CLE_NOM]))
-
-
 def _verifier_structure_stock(stock: object) -> int:
     """Renvoie un code indiquant si la structure est valide ou pas"""
     if not isinstance(stock, list):
@@ -138,7 +133,7 @@ def _extraire_nom_produit_valide(
 ) -> tuple[str | None, list[str]]:
     """Vérifie et renvoie un nom valide ou None avec la liste des warnings associés"""
     
-    largeur_colonne = const.LARGEUR_COL
+    taille_max_nom_produit = const.TAILLE_MAX_NOM_PRODUIT
 
     anomalies_nom = []
     
@@ -156,10 +151,10 @@ def _extraire_nom_produit_valide(
         anomalies_nom.append(const.ANO_NOM_VIDE.format(CLE_NOM))
         return None, anomalies_nom
         
-    if len(nom_strip) > largeur_colonne:
-        nom_strip = nom_strip[:largeur_colonne]
+    if len(nom_strip) > taille_max_nom_produit:
+        nom_strip = nom_strip[:taille_max_nom_produit]
         anomalies_nom.append(
-            const.ANO_CHAMP_TROP_LONG.format(CLE_NOM, largeur_colonne)
+            const.ANO_CHAMP_TROP_LONG.format(CLE_NOM, taille_max_nom_produit)
         )
     
     return nom_strip, anomalies_nom
@@ -248,6 +243,11 @@ def _extraire_stock_valide(
             anomalies.append(txt_anomalie + anomalie)
     
     return stock_nettoye, anomalies
+
+
+def trier_stock(stock: list[types_structure.Produit]) -> None:
+    """Trie le stock par nom de produit"""
+    stock.sort(key=lambda item: norm(item[CLE_NOM]))
 
 
 def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:

@@ -48,6 +48,8 @@ def _attendre_touche_entree_pour_retour_menu() -> None:
 
 
 def _attendre_choix_navigation_page(choix_possible: int) -> str:
+    """Renvoie un choix valide pour naviguer dans les pages d'un affichage
+    ou revenir au menu principal"""
     MENUP_CHOIX = const.MENUP_CHOIX
     RETOUR_MENU = const.CHOIX_RETOUR_MENU
     PAGE_PRECEDENTE = const.CHOIX_PAGE_PRECEDENTE
@@ -177,6 +179,8 @@ def _afficher_aide_navigation_page(page_courante: int, total_pages: int) -> int:
 
 
 def _calculer_total_pages(produits: list[types_structure.Produit]) -> int:
+    """Renvoie le nombre total de pages pour une liste de produits à afficher
+    avec n produits par page"""
     nb_produits = len(produits)
     total_pages = nb_produits // NB_PRODUITS_PAR_PAGE
     if (nb_produits % NB_PRODUITS_PAR_PAGE != 0):
@@ -188,6 +192,7 @@ def _mettre_a_jour_page_courante(
     choix_navigation: int,
     page_courante: int
 ) -> int | None:
+    """Renvoie le numéro de la page courante après le choix de navigation"""
     match _attendre_choix_navigation_page(choix_navigation):
         case const.CHOIX_PAGE_PRECEDENTE:
             return page_courante - 1
@@ -263,13 +268,15 @@ def demander_info_produit(
 
 
 def demander_nom_produit(message: str) -> str | None:
+    """Demande et renvoie un nom de produit ne dépassant pas une taille max
+    ou None si la saisie est vide"""
     while True:
         nom: str = input(message).strip()
         if not nom:
             return None
         
-        if len(nom) > LARGEUR_COL:
-            print(const.CTRL_NOM_TROP_LONG.format(LARGEUR_COL))
+        if len(nom) > const.TAILLE_MAX_NOM_PRODUIT:
+            print(const.CTRL_NOM_TROP_LONG.format(const.TAILLE_MAX_NOM_PRODUIT))
             continue
         
         return nom
