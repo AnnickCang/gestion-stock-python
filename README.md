@@ -146,7 +146,8 @@ Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience
 - renommage en anglais de toutes les appellations dans le code
 - pour les données, remplacement de la liste de dictionnaires par un dictionnaire de dictionnaires
 - ajout des champs `unité` et `type`
-- modification du type des champs `quantite` et `seuil` en `float`
+- modification du type du champ `prix` en un type adapté aux montants financiers
+- modification du type des champs `quantite` et `seuil` en un type adapté aux valeurs décimales
 - possibilité d'affichage par type de produits
 - possibilité de trier l'affichage autrement que par le nom du produit
 - autocomplétion pour le nom du produit
