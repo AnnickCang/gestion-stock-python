@@ -42,7 +42,7 @@ ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE = (
 
 # Aide à la navigation
 NAV_MSG_ENTREE_POUR_CONTINUER = "\n(Appuyer sur 'Entrée' pour continuer)"
-NAV_RETOUR_MENU = "[Entrée] : retour menu principal"
+NAV_RETOUR_MENU = "[Entrée] : retour au menu principal"
 NAV_PAGE_PRECEDENTE = f"{'[p + Entrée] : précédente':26}"
 NAV_PAGE_SUIVANTE = "[s + Entrée] : suivante"
 NAV_PAGE_PRECEDENTE_VIDE = f"{' ':26}"
@@ -127,6 +127,7 @@ CHOIX_PAGE_SUIVANTE = "S"
 CHOIX_PAGE_PRECEDENTE = "P"
 CHOIX_RETOUR_MENU = ""
 NB_LIGNES_VIDES_SOUS_TABLEAU = 3
+TAILLE_MAX_NOM_PRODUIT = LARGEUR_COL
 
 # Labels
 LBL_NOM_PRODUIT = "Produit \t: "
