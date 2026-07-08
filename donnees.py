@@ -1,8 +1,17 @@
 import json
+from enum import Enum, unique, auto
 
 import types_structure as ts
 import constantes as const
 from normalisation import normaliser_chaine_pour_comparaison as norm
+
+
+@unique
+class ResultatChargementFichier(Enum):
+    SUCCES = auto()
+    FICHIER_INTROUVABLE = auto()
+    JSON_INVALIDE = auto()
+    STOCK_PAS_UNE_LISTE = auto()
 
 
 CLE_NOM = const.CLE_NOM
