@@ -1,6 +1,6 @@
 import json
 
-import types_structure
+import types_structure as ts
 import constantes as const
 from normalisation import normaliser_chaine_pour_comparaison as norm
 
@@ -22,7 +22,7 @@ def _verifier_structure_stock(stock: object) -> int:
 def _extraire_champ_entier_valide(
     produit: dict[str, object],
     champ: str
-) -> tuple[int, str]:
+) -> ts.EntierExtraitAvecWarning:
     """Vérifie et renvoie un entier >= 0 avec éventuellement un warning"""
 
     entier_valide = 0
@@ -35,23 +35,23 @@ def _extraire_champ_entier_valide(
     )
 
     if champ not in produit:
-        return entier_valide, msg_champ_inexistant
+        return ts.EntierExtraitAvecWarning(entier_valide, msg_champ_inexistant)
     
     valeur_champ = produit[champ]
 
     if isinstance(valeur_champ, int):
         if isinstance(valeur_champ, bool) or valeur_champ < 0:
-            return entier_valide, msg_converti_a_zero
+            return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_a_zero)
         
         valeur = valeur_champ
-        return valeur, ""
+        return ts.EntierExtraitAvecWarning(valeur, "")
     
     if isinstance(valeur_champ, float):
         if valeur_champ < 0:
-            return entier_valide, msg_converti_a_zero
+            return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_a_zero)
         
         entier_valide = int(valeur_champ)
-        return entier_valide, msg_converti_en_entier
+        return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_en_entier)
     
     if isinstance(valeur_champ, str):
         try:
@@ -59,25 +59,25 @@ def _extraire_champ_entier_valide(
             valeur_convertie = int(valeur_convertie)
 
             if valeur_convertie < 0:
-                return entier_valide, msg_converti_a_zero
+                return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_a_zero)
 
             entier_valide = valeur_convertie
             msg_converti_en_nombre = const.ANO_CHAMP_NUM_CONV_VAL.format(
                 champ,
                 entier_valide
             )
-            return entier_valide, msg_converti_en_nombre
+            return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_en_nombre)
 
         except ValueError:
-            return entier_valide, msg_converti_a_zero
+            return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_a_zero)
 
-    return entier_valide, msg_converti_a_zero
+    return ts.EntierExtraitAvecWarning(entier_valide, msg_converti_a_zero)
 
 
 def _extraire_champ_flottant_valide(
     produit: dict[str, object],
     champ: str
-) -> tuple[float, str]:
+) -> ts.FlottantExtraitAvecWarning:
     """Vérifie et renvoie un flottant >= 0 avec éventuellement un warning"""
 
     flottant_valide = 0.0
@@ -90,47 +90,47 @@ def _extraire_champ_flottant_valide(
     )
 
     if champ not in produit:
-        return flottant_valide, msg_champ_inexistant
+        return ts.FlottantExtraitAvecWarning(flottant_valide, msg_champ_inexistant)
     
     valeur_champ = produit[champ]
 
     if isinstance(valeur_champ, float):
         if valeur_champ < 0:
-            return flottant_valide, msg_converti_a_zero
+            return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_a_zero)
         
         flottant_valide = valeur_champ
-        return flottant_valide, ""
+        return ts.FlottantExtraitAvecWarning(flottant_valide, "")
     
     if isinstance(valeur_champ, int):
         if isinstance(valeur_champ, bool) or valeur_champ < 0:
-            return flottant_valide, msg_converti_a_zero
+            return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_a_zero)
         
         flottant_valide = float(valeur_champ)
-        return flottant_valide, msg_converti_en_flottant
+        return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_en_flottant)
     
     if isinstance(valeur_champ, str):
         try:
             valeur_convertie = float(valeur_champ)
 
             if valeur_convertie < 0:
-                return flottant_valide, msg_converti_a_zero
+                return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_a_zero)
 
             flottant_valide = valeur_convertie
             msg_converti_en_nombre = const.ANO_CHAMP_NUM_CONV_VAL.format(
                 champ,
                 flottant_valide
             )
-            return flottant_valide, msg_converti_en_nombre
+            return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_en_nombre)
 
         except ValueError:
-            return flottant_valide, msg_converti_a_zero
+            return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_a_zero)
     
-    return flottant_valide, msg_converti_a_zero
+    return ts.FlottantExtraitAvecWarning(flottant_valide, msg_converti_a_zero)
 
 
 def _extraire_nom_produit_valide(
     produit: dict[str, object]
-) -> tuple[str | None, list[str]]:
+) -> ts.NomExtraitAvecWarnings:
     """Vérifie et renvoie un nom valide ou None avec la liste des warnings associés"""
     
     taille_max_nom_produit = const.TAILLE_MAX_NOM_PRODUIT
@@ -139,17 +139,17 @@ def _extraire_nom_produit_valide(
     
     if CLE_NOM not in produit:
         anomalies_nom.append(const.ANO_NOM_INEXISTANT)
-        return None, anomalies_nom
+        return ts.NomExtraitAvecWarnings(None, anomalies_nom)
     
     nom = produit[CLE_NOM]
     if not isinstance(nom, str):
         anomalies_nom.append(const.ANO_CHAMP_PAS_STR.format(CLE_NOM))
-        return None, anomalies_nom
+        return ts.NomExtraitAvecWarnings(None, anomalies_nom)
     
     nom_strip = nom.strip()
     if nom_strip == "":
         anomalies_nom.append(const.ANO_NOM_VIDE.format(CLE_NOM))
-        return None, anomalies_nom
+        return ts.NomExtraitAvecWarnings(None, anomalies_nom)
         
     if len(nom_strip) > taille_max_nom_produit:
         nom_strip = nom_strip[:taille_max_nom_produit]
@@ -157,12 +157,12 @@ def _extraire_nom_produit_valide(
             const.ANO_CHAMP_TROP_LONG.format(CLE_NOM, taille_max_nom_produit)
         )
     
-    return nom_strip, anomalies_nom
+    return ts.NomExtraitAvecWarnings(nom_strip, anomalies_nom)
 
 
 def _extraire_champs_numeriques_valides(
     produit: dict[str, object]
-) -> tuple[types_structure.ChampsNumeriquesProduit, list[str]]:
+) -> ts.ChampsNumeriquesExtraitsAvecWarnings:
     """Vérifie et renvoie les champs numériques avec une valeur valide ou 0
     et la liste des warnings associés"""
     
@@ -178,17 +178,20 @@ def _extraire_champs_numeriques_valides(
     if msg_anomalie != "":
         champs_numeriques_anomalies.append(msg_anomalie)
 
-    champs_numeriques_produit: types_structure.ChampsNumeriquesProduit = {
+    champs_numeriques_produit: ts.ChampsNumeriquesProduit = {
         CLE_QUANTITE: quantite,
         CLE_SEUIL: seuil,
         CLE_PRIX: prix
     }
-    return champs_numeriques_produit, champs_numeriques_anomalies
+    return ts.ChampsNumeriquesExtraitsAvecWarnings(
+        champs_numeriques_produit,
+        champs_numeriques_anomalies
+    )
 
 
 def _extraire_produit_valide(
     produit: object
-) -> tuple[types_structure.Produit | None, list[str]]:
+) -> ts.ProduitExtraitValideAvecWarnings:
     """Vérifie et retourne un produit avec des clés et valeurs valides ou None
     et la liste de warnings associés"""
     
@@ -196,33 +199,33 @@ def _extraire_produit_valide(
 
     if not isinstance(produit, dict):
         produit_anomalies.append(const.ANO_PRODUIT_STRUCTURE_INVALIDE)
-        return None, produit_anomalies
+        return ts.ProduitExtraitValideAvecWarnings(None, produit_anomalies)
      
     produit_dict: dict[str, object] = produit
     nom_nettoye, nom_anomalies = _extraire_nom_produit_valide(produit_dict)
     produit_anomalies.extend(nom_anomalies)
     if nom_nettoye is None:
-        return None, produit_anomalies
+        return ts.ProduitExtraitValideAvecWarnings(None, produit_anomalies)
     
     numeriques_valides, anomalies_numeriques = _extraire_champs_numeriques_valides(produit_dict)
     produit_anomalies.extend(anomalies_numeriques)
     
-    produit_nettoye: types_structure.Produit = {
+    produit_nettoye: ts.Produit = {
         CLE_NOM: nom_nettoye,
         CLE_QUANTITE: numeriques_valides[CLE_QUANTITE],
         CLE_SEUIL: numeriques_valides[CLE_SEUIL],
         CLE_PRIX: numeriques_valides[CLE_PRIX]
     }
-    return produit_nettoye, produit_anomalies
+    return ts.ProduitExtraitValideAvecWarnings(produit_nettoye, produit_anomalies)
 
 
 def _extraire_stock_valide(
     stock: list[object]
-) -> tuple[list[types_structure.Produit], list[str]]:
+) -> ts.StockExtraitValideAvecWarnings:
     """Renvoie un stock avec des produits vérifiés, nettoyés et sans doublons
     et éventuellement les anomalies associées"""
 
-    stock_nettoye: list[types_structure.Produit] = []
+    stock_nettoye: list[ts.Produit] = []
     anomalies: list[str] = []
     cles_noms_deja_vus: set[str] = set()
 
@@ -242,15 +245,15 @@ def _extraire_stock_valide(
             txt_anomalie = const.ANO_NO_PRODUIT.format(no_produit)
             anomalies.append(txt_anomalie + anomalie)
     
-    return stock_nettoye, anomalies
+    return ts.StockExtraitValideAvecWarnings(stock_nettoye, anomalies)
 
 
-def trier_stock(stock: list[types_structure.Produit]) -> None:
+def trier_stock(stock: list[ts.Produit]) -> None:
     """Trie le stock par nom de produit"""
     stock.sort(key=lambda item: norm(item[CLE_NOM]))
 
 
-def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
+def charger_stock() -> ts.StockExtraitValideAvecErrFichierEtWarnings:
     """Charge les données du fichier de stock et renvoie le code erreur ou pas d'erreur,
     la liste des produits valides et la liste des anomalies"""
     try:
@@ -258,21 +261,37 @@ def charger_stock() -> tuple[int, list[types_structure.Produit], list[str]]:
             stock = json.load(f)
 
             if _verifier_structure_stock(stock) == const.ERR_STOCK_PAS_UNE_LISTE:
-                return const.ERR_STOCK_PAS_UNE_LISTE, [], []
+                return ts.StockExtraitValideAvecErrFichierEtWarnings(
+                    const.ERR_STOCK_PAS_UNE_LISTE,
+                    [],
+                    []
+                )
 
             stock_nettoye, anomalies = _extraire_stock_valide(stock)
 
             trier_stock(stock_nettoye)
 
-            return const.NO_ERR, stock_nettoye, anomalies
+            return ts.StockExtraitValideAvecErrFichierEtWarnings(
+                const.NO_ERR,
+                stock_nettoye,
+                anomalies
+            )
         
     except FileNotFoundError:
-        return const.ERR_FILE_NOT_FOUND, [], []
+        return ts.StockExtraitValideAvecErrFichierEtWarnings(
+            const.ERR_FILE_NOT_FOUND,
+            [],
+            []
+        )
     except json.JSONDecodeError:
-        return const.ERR_JSON_DECODE_ERROR, [], []
+        return ts.StockExtraitValideAvecErrFichierEtWarnings(
+            const.ERR_JSON_DECODE_ERROR,
+            [],
+            []
+        )
     
     
-def sauvegarder_stock(stock: list[types_structure.Produit]) -> None:
+def sauvegarder_stock(stock: list[ts.Produit]) -> None:
     """Sauvegarde le stock trié par nom"""
     trier_stock(stock)
     with open(const.FICHIER_STOCK, "w", encoding="utf-8") as f:
