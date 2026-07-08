@@ -218,7 +218,7 @@ def _formater_texte_en_rouge(texte: str, condition: bool) -> str:
 
 def _formater_info_produit(
     produit: types_structure.Produit
-) -> tuple[str, str, str, str]:
+) -> types_structure.InfosProduitFormatees:
     nom = produit[CLE_NOM]
     quantite = _formater_texte_en_rouge(
         str(produit[CLE_QUANTITE]),
@@ -228,7 +228,7 @@ def _formater_info_produit(
     prix = f"{produit[CLE_PRIX]:.2f}"
     prix = _formater_texte_en_rouge(prix, verifier_prix_nul(produit))
 
-    return nom, quantite, seuil, prix
+    return types_structure.InfosProduitFormatees(nom, quantite, seuil, prix)
 
 
 def effacer_ecran_terminal() -> None:
