@@ -106,6 +106,13 @@ source .venv/bin/activate
 python main.py
 ```
 
+## Limite connue
+L'application charge le contenu du fichier `stock.json` une seule fois au démarrage et travaille ensuite sur une copie des données en mémoire.
+Ce fichier ne doit pas être modifié pendant l'exécution de l'application. Dans le cas contraire, les modifications externes risquent d'être écrasées lors de la prochaine sauvegarde effectuée par l'application.
+Cette limitation est acceptée pour la v1.x, l'application étant destinée à un usage local mono-utilisateur.
+La migration vers une base de données SQL permettra de mieux gérer cette problématique.
+
+
 ## Évolution du projet
 Le projet évolue progressivement afin d'améliorer la robustesse, l'expérience utilisateur et l'architecture du code.
 
