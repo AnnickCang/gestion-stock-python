@@ -1,5 +1,6 @@
 import json
 from enum import Enum, unique, auto
+from typing import NamedTuple
 
 import types_structure as ts
 import constantes as const
@@ -14,18 +15,24 @@ class ResultatChargementFichier(Enum):
     STOCK_PAS_UNE_LISTE = auto()
 
 
+class ResultatChargementStock(NamedTuple):
+    resultat_chargement: ResultatChargementFichier
+    stock: list[ts.Produit]
+    warnings: list[str]
+
+
 CLE_NOM = const.CLE_NOM
 CLE_QUANTITE = const.CLE_QUANTITE
 CLE_SEUIL = const.CLE_SEUIL
 CLE_PRIX = const.CLE_PRIX
 
 
-def _verifier_structure_stock(stock: object) -> int:
+def _verifier_structure_stock(stock: object) -> ResultatChargementFichier:
     """Renvoie un code indiquant si la structure est valide ou pas"""
     if not isinstance(stock, list):
-        return const.ERR_STOCK_PAS_UNE_LISTE
+        return ResultatChargementFichier.STOCK_PAS_UNE_LISTE
     
-    return const.NO_ERR
+    return ResultatChargementFichier.SUCCES
 
 
 def _extraire_champ_entier_valide(
@@ -262,16 +269,17 @@ def trier_stock(stock: list[ts.Produit]) -> None:
     stock.sort(key=lambda item: norm(item[CLE_NOM]))
 
 
-def charger_stock() -> ts.StockExtraitValideAvecErrFichierEtWarnings:
-    """Charge les données du fichier de stock et renvoie le code erreur ou pas d'erreur,
+def charger_stock() -> ResultatChargementStock:
+    """Charge les données du fichier de stock et renvoie un résultat de chargement,
     la liste des produits valides et la liste des anomalies"""
     try:
         with open(const.FICHIER_STOCK, "r", encoding="utf-8") as f:
             stock = json.load(f)
 
-            if _verifier_structure_stock(stock) == const.ERR_STOCK_PAS_UNE_LISTE:
-                return ts.StockExtraitValideAvecErrFichierEtWarnings(
-                    const.ERR_STOCK_PAS_UNE_LISTE,
+            resultat_structure = _verifier_structure_stock(stock)
+            if resultat_structure is ResultatChargementFichier.STOCK_PAS_UNE_LISTE:
+                return ResultatChargementStock(
+                    ResultatChargementFichier.STOCK_PAS_UNE_LISTE,
                     [],
                     []
                 )
@@ -280,21 +288,21 @@ def charger_stock() -> ts.StockExtraitValideAvecErrFichierEtWarnings:
 
             trier_stock(stock_nettoye)
 
-            return ts.StockExtraitValideAvecErrFichierEtWarnings(
-                const.NO_ERR,
+            return ResultatChargementStock(
+                ResultatChargementFichier.SUCCES,
                 stock_nettoye,
                 anomalies
             )
         
     except FileNotFoundError:
-        return ts.StockExtraitValideAvecErrFichierEtWarnings(
-            const.ERR_FILE_NOT_FOUND,
+        return ResultatChargementStock(
+            ResultatChargementFichier.FICHIER_INTROUVABLE,
             [],
             []
         )
     except json.JSONDecodeError:
-        return ts.StockExtraitValideAvecErrFichierEtWarnings(
-            const.ERR_JSON_DECODE_ERROR,
+        return ResultatChargementStock(
+            ResultatChargementFichier.JSON_INVALIDE,
             [],
             []
         )

@@ -5,6 +5,7 @@ import types_structure
 import constantes as const
 from gestion_stock import verifier_quantite_sous_seuil
 from gestion_stock import verifier_prix_nul
+from donnees import ResultatChargementFichier
 
 
 CLE_NOM = const.CLE_NOM
@@ -494,15 +495,15 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
         effacer_ecran_terminal()
 
 
-def afficher_erreur_fichier(code_err: int) -> None:
+def afficher_erreur_fichier(code_err: ResultatChargementFichier) -> None:
     match code_err:
-        case const.ERR_FILE_NOT_FOUND:
+        case ResultatChargementFichier.FICHIER_INTROUVABLE:
             print(const.ERR_MSG_FICHIER_STOCK_ABSENT)
-        case const.ERR_JSON_DECODE_ERROR:
+        case ResultatChargementFichier.JSON_INVALIDE:
             print(const.ERR_MSG_FICHIER_STOCK_ENDOMMAGE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
-        case const.ERR_STOCK_PAS_UNE_LISTE:
+        case ResultatChargementFichier.STOCK_PAS_UNE_LISTE:
             print(const.ERR_MSG_FICHIER_MAUVAISE_STRUCTURE)
             print(const.ERR_MSG_FICHIER_STRUCTURE_LISTE_OBLIGATOIRE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)

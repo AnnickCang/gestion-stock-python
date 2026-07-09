@@ -50,9 +50,3 @@ class ProduitExtraitValideAvecWarnings(NamedTuple):
 class StockExtraitValideAvecWarnings(NamedTuple):
     stock: list[Produit]
     warnings: list[str]
-
-
-class StockExtraitValideAvecErrFichierEtWarnings(NamedTuple):
-    erreur_fichier: int
-    stock: list[Produit]
-    warnings: list[str]

@@ -8,10 +8,6 @@ CLE_SEUIL = "seuil"
 CLE_PRIX = "prix"
 
 # Gestion des erreurs
-NO_ERR = 0
-ERR_FILE_NOT_FOUND = 1
-ERR_JSON_DECODE_ERROR = 2
-ERR_STOCK_PAS_UNE_LISTE = 3
 ERR_MSG_FICHIER_MAUVAISE_STRUCTURE = (
     "\nLa structure du fichier de données '{0}' n'est pas adaptée.".format(
         FICHIER_STOCK
