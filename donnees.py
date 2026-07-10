@@ -13,6 +13,7 @@ class ResultatChargementFichier(Enum):
     FICHIER_INTROUVABLE = auto()
     JSON_INVALIDE = auto()
     STOCK_PAS_UNE_LISTE = auto()
+    PERMISSION_REFUSEE = auto()
 
 
 class ResultatChargementStock(NamedTuple):
