@@ -508,6 +508,9 @@ def afficher_erreur_fichier(code_err: ResultatChargementFichier) -> None:
             print(const.ERR_MSG_FICHIER_STRUCTURE_LISTE_OBLIGATOIRE)
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
+        case ResultatChargementFichier.ACCES_FICHIER_REFUSE:
+            print(const.ERR_MSG_PERMISSION_REFUSEE)
+            print(const.ERR_ARRET_PROGRAMME)
     _attendre_touche_entree_avec_message()
 
 

@@ -35,6 +35,11 @@ ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE = (
     "Si vous voulez garder votre fichier '{0}', sauvegardez-le "
     "ailleurs ou renommez-le avant de continuer.".format(FICHIER_STOCK)
 )
+ERR_MSG_PERMISSION_REFUSEE = (
+    "Impossible d'accéder au fichier '{0}'. Vérifiez que vous disposez des droits "
+    "nécessaires sur le fichier ou son dossier.".format(FICHIER_STOCK)
+)
+ERR_ARRET_PROGRAMME = "Le programme va s'arrêter."
 
 # Aide à la navigation
 NAV_MSG_ENTREE_POUR_CONTINUER = "\n(Appuyer sur 'Entrée' pour continuer)"

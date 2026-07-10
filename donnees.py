@@ -13,7 +13,7 @@ class ResultatChargementFichier(Enum):
     FICHIER_INTROUVABLE = auto()
     JSON_INVALIDE = auto()
     STOCK_PAS_UNE_LISTE = auto()
-    PERMISSION_REFUSEE = auto()
+    ACCES_FICHIER_REFUSE = auto()
 
 
 class ResultatChargementStock(NamedTuple):
@@ -304,6 +304,12 @@ def charger_stock() -> ResultatChargementStock:
     except json.JSONDecodeError:
         return ResultatChargementStock(
             ResultatChargementFichier.JSON_INVALIDE,
+            [],
+            []
+        )
+    except PermissionError:
+        return ResultatChargementStock(
+            ResultatChargementFichier.ACCES_FICHIER_REFUSE,
             [],
             []
         )

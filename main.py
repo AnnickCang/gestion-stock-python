@@ -123,6 +123,10 @@ def _gerer_renommage(stock: list[types_structure.Produit]) -> None:
 def main():
     chargement_fichier, stock, anomalies_du_fichier = donnees.charger_stock()
 
+    if chargement_fichier is donnees.ResultatChargementFichier.ACCES_FICHIER_REFUSE:
+        ifc.afficher_erreur_fichier(chargement_fichier)
+        return
+    
     if chargement_fichier is not donnees.ResultatChargementFichier.SUCCES:
         ifc.afficher_erreur_fichier(chargement_fichier)
     
