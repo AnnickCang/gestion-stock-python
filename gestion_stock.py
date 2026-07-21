@@ -1,6 +1,7 @@
 import types_structure
 import constantes as const
 from donnees import sauvegarder_stock
+from donnees import ResultatSauvegardeFichier
 from normalisation import normaliser_chaine_pour_comparaison as norm
 
 
@@ -28,7 +29,7 @@ def ajouter_produit(
     quantite: int,
     seuil: int, 
     prix: float,
-) -> None:
+) -> ResultatSauvegardeFichier:
     produit: types_structure.Produit = {
         CLE_NOM: nom,
         CLE_QUANTITE: quantite,
@@ -36,7 +37,8 @@ def ajouter_produit(
         CLE_PRIX: round(prix, 2)
     }
     stock.append(produit)
-    sauvegarder_stock(stock)
+    resultat_sauvegarde = sauvegarder_stock(stock)
+    return resultat_sauvegarde
 
 
 def modifier_produit(
@@ -45,11 +47,12 @@ def modifier_produit(
     quantite: int,
     seuil: int, 
     prix: float,
-) -> None:
+) -> ResultatSauvegardeFichier:
     produit[CLE_QUANTITE] = quantite
     produit[CLE_SEUIL] = seuil
     produit[CLE_PRIX] = round(prix, 2)
-    sauvegarder_stock(stock)
+    resultat_sauvegarde = sauvegarder_stock(stock)
+    return resultat_sauvegarde
 
 
 def trouver_alertes(
@@ -66,18 +69,20 @@ def trouver_alertes(
 def supprimer_produit(
     stock: list[types_structure.Produit], 
     produit: types_structure.Produit
-) -> None:
+) -> ResultatSauvegardeFichier:
     stock.remove(produit)
-    sauvegarder_stock(stock)
+    resultat_sauvegarde = sauvegarder_stock(stock)
+    return resultat_sauvegarde
 
 
 def renommer_produit(
     stock: list[types_structure.Produit],
     produit: types_structure.Produit,
     nouveau_nom: str
-) -> None:
+) -> ResultatSauvegardeFichier:
     produit[CLE_NOM] = nouveau_nom
-    sauvegarder_stock(stock)
+    resultat_sauvegarde = sauvegarder_stock(stock)
+    return resultat_sauvegarde
 
 
 def verifier_nom_disponible(
