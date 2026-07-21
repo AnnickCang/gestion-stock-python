@@ -6,6 +6,7 @@ import constantes as const
 from gestion_stock import verifier_quantite_sous_seuil
 from gestion_stock import verifier_prix_nul
 from donnees import ResultatChargementFichier
+from donnees import ResultatSauvegardeFichier
 
 
 CLE_NOM = const.CLE_NOM
@@ -495,7 +496,9 @@ def afficher_inventaire(stock: list[types_structure.Produit]) -> None:
         effacer_ecran_terminal()
 
 
-def afficher_erreur_fichier(code_err: ResultatChargementFichier) -> None:
+def afficher_erreur_fichier(
+    code_err: ResultatChargementFichier | ResultatSauvegardeFichier
+) -> None:
     match code_err:
         case ResultatChargementFichier.FICHIER_INTROUVABLE:
             print(const.ERR_MSG_FICHIER_STOCK_ABSENT)
@@ -509,6 +512,11 @@ def afficher_erreur_fichier(code_err: ResultatChargementFichier) -> None:
             print(const.ERR_MSG_NOUVEAU_FICHIER_STOCK)
             print(const.ERR_MSG_SAUVER_FICHIER_STOCK_ENDOMMAGE)
         case ResultatChargementFichier.ACCES_FICHIER_REFUSE:
+            print(const.ERR_MSG_PERMISSION_REFUSEE)
+            print(const.ERR_ARRET_PROGRAMME)
+        case ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE:
+            _afficher_lignes_vides()
+            print(const.ERR_MSG_SAUVEGARDE_ECHOUEE)
             print(const.ERR_MSG_PERMISSION_REFUSEE)
             print(const.ERR_ARRET_PROGRAMME)
     _attendre_touche_entree_avec_message()

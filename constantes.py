@@ -39,6 +39,9 @@ ERR_MSG_PERMISSION_REFUSEE = (
     "Impossible d'accéder au fichier '{0}'. Vérifiez que vous disposez des droits "
     "nécessaires sur le fichier ou son dossier.".format(FICHIER_STOCK)
 )
+ERR_MSG_SAUVEGARDE_ECHOUEE = (
+    "La sauvegarde du stock a échoué. La dernière modification n'a pas été prise en compte."
+)
 ERR_ARRET_PROGRAMME = "Le programme va s'arrêter."
 
 # Aide à la navigation

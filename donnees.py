@@ -15,6 +15,11 @@ class ResultatChargementFichier(Enum):
     STOCK_PAS_UNE_LISTE = auto()
     ACCES_FICHIER_REFUSE = auto()
 
+@unique
+class ResultatSauvegardeFichier(Enum):
+    SUCCES = auto()
+    ANNULATION = auto()
+    ACCES_FICHIER_REFUSE = auto()
 
 class ResultatChargementStock(NamedTuple):
     resultat_chargement: ResultatChargementFichier
@@ -315,8 +320,12 @@ def charger_stock() -> ResultatChargementStock:
         )
     
     
-def sauvegarder_stock(stock: list[ts.Produit]) -> None:
-    """Sauvegarde le stock trié par nom"""
+def sauvegarder_stock(stock: list[ts.Produit]) -> ResultatSauvegardeFichier:
+    """Sauvegarde le stock trié par nom et renvoie le résultat de la sauvegarde"""
     trier_stock(stock)
-    with open(const.FICHIER_STOCK, "w", encoding="utf-8") as f:
-        json.dump(stock, f, indent=4, ensure_ascii=False)
+    try:
+        with open(const.FICHIER_STOCK, "w", encoding="utf-8") as f:
+            json.dump(stock, f, indent=4, ensure_ascii=False)
+        return ResultatSauvegardeFichier.SUCCES
+    except PermissionError:
+        return ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE
