@@ -27,7 +27,8 @@ def _gerer_ajout_modification(
             donnees_produit = ifc.demander_info_produit(None, nom_produit)
             if donnees_produit is None:
                 break
-            resultat_sauvegarde = gs.ajouter_produit(stock, nom_produit, **donnees_produit)
+            gs.ajouter_produit(stock, nom_produit, **donnees_produit)
+            resultat_sauvegarde = donnees.sauvegarder_stock(stock)
             if resultat_sauvegarde is donnees.ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE:
                 break
 
@@ -38,7 +39,8 @@ def _gerer_ajout_modification(
         donnees_produit = ifc.demander_info_produit(produit)
         if donnees_produit is None:
             break
-        resultat_sauvegarde = gs.modifier_produit(stock, produit, **donnees_produit)
+        gs.modifier_produit(produit, **donnees_produit)
+        resultat_sauvegarde = donnees.sauvegarder_stock(stock)
         if resultat_sauvegarde is donnees.ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE:
             break
         ifc.afficher_produit_modifie(nom_produit)
@@ -69,7 +71,8 @@ def _gerer_suppression(
 
         nom_produit_a_supprimer = produit[CLE_NOM]
         if ifc.demander_confirmation_suppression(nom_produit_a_supprimer):
-            resultat_sauvegarde = gs.supprimer_produit(stock, produit)
+            gs.supprimer_produit(stock, produit)
+            resultat_sauvegarde = donnees.sauvegarder_stock(stock)
             if resultat_sauvegarde is donnees.ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE:
                 break
 
@@ -135,7 +138,8 @@ def _gerer_renommage(
             if gs.verifier_nom_disponible(
                 stock, produit[CLE_NOM], nouveau_nom
             ):
-                resultat_sauvegarde = gs.renommer_produit(stock, produit, nouveau_nom)
+                gs.renommer_produit(produit, nouveau_nom)
+                resultat_sauvegarde = donnees.sauvegarder_stock(stock)
                 if resultat_sauvegarde is donnees.ResultatSauvegardeFichier.ACCES_FICHIER_REFUSE:
                     retour_menu_principal = True
                     break
