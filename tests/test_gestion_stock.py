@@ -46,3 +46,30 @@ def test_ajouter_produit():
     gestion_stock.ajouter_produit(stock, nom, quantite, seuil, prix)
 
     assert stock == stock_attendu
+
+
+def test_modifier_produit():
+    produit_a_modifier: types_structure.Produit = {
+        "nom": "CHOCOLAT",
+        "quantite": 1,
+        "seuil": 2,
+        "prix": 3.75
+    }
+    nouvelle_quantite = 5
+    nouveau_seuil = 3
+    nouveau_prix = 2.233
+    produit_attendu: types_structure.Produit = {
+        "nom": "CHOCOLAT",
+        "quantite": 5,
+        "seuil": 3,
+        "prix": 2.23
+    }
+
+    gestion_stock.modifier_produit(
+        produit_a_modifier,
+        nouvelle_quantite,
+        nouveau_seuil,
+        nouveau_prix
+    )
+
+    assert produit_a_modifier == produit_attendu
