@@ -73,3 +73,22 @@ def test_modifier_produit():
     )
 
     assert produit_a_modifier == produit_attendu
+
+
+def test_trouver_alertes():
+    stock: list[types_structure.Produit] = [
+        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
+        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
+        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
+        {"nom": "M&M's", "quantite": 10, "seuil": 3, "prix": 2.5},
+        {"nom": "noix de Cajou", "quantite": 10, "seuil": 10, "prix": 0.75},
+        {"nom": "Tomate cerise", "quantite": 5, "seuil": 10, "prix": 0.75},
+    ]
+    alertes_attendues: list[types_structure.Produit] = [
+        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
+        {"nom": "Tomate cerise", "quantite": 5, "seuil": 10, "prix": 0.75},
+    ]
+
+    resultat = gestion_stock.trouver_alertes(stock)
+
+    assert resultat == alertes_attendues
