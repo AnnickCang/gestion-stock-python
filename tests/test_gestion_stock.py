@@ -92,3 +92,25 @@ def test_trouver_alertes():
     resultat = gestion_stock.trouver_alertes(stock)
 
     assert resultat == alertes_attendues
+
+
+def test_supprimer_produit():
+    stock: list[types_structure.Produit] = [
+        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
+        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
+        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
+    ]
+    produit_a_supprimer: types_structure.Produit = {
+        "nom": "Café",
+        "quantite": 1,
+        "seuil": 2,
+        "prix": 18.5
+    }
+    stock_attendu: list[types_structure.Produit] = [
+        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
+        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
+    ]
+
+    gestion_stock.supprimer_produit(stock, produit_a_supprimer)
+
+    assert stock == stock_attendu
