@@ -134,3 +134,24 @@ def test_renommer_produit():
     gestion_stock.renommer_produit(produit, nouveau_nom)
 
     assert produit == produit_attendu
+
+
+@pytest.mark.parametrize(
+    ("ancien_nom", "nouveau_nom", "booleen_attendu"),
+    [
+        ("Café", "Bonbon", False),
+        ("deca", "Déca", True),
+        ("bonbon", "chocolat", True),
+    ]
+)
+
+
+def test_verifier_nom_disponible(ancien_nom, nouveau_nom, booleen_attendu):
+    stock: list[types_structure.Produit] = [
+        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
+        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
+        {"nom": "deca", "quantite": 3, "seuil": 2, "prix": 15.0},
+    ]
+    resultat = gestion_stock.verifier_nom_disponible(stock, ancien_nom, nouveau_nom)
+
+    assert resultat == booleen_attendu
