@@ -114,3 +114,23 @@ def test_supprimer_produit():
     gestion_stock.supprimer_produit(stock, produit_a_supprimer)
 
     assert stock == stock_attendu
+
+
+def test_renommer_produit():
+    produit: types_structure.Produit = {
+        "nom": "Café",
+        "quantite": 1,
+        "seuil": 2,
+        "prix": 18.5
+    }
+    nouveau_nom = "Décaféiné"
+    produit_attendu: types_structure.Produit = {
+            "nom": "Décaféiné",
+            "quantite": 1,
+            "seuil": 2,
+            "prix": 18.5
+        }
+
+    gestion_stock.renommer_produit(produit, nouveau_nom)
+
+    assert produit == produit_attendu
