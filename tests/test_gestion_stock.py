@@ -171,3 +171,18 @@ def test_verifier_quantite_sous_seuil(produit, booleen_attendu):
     resultat = gestion_stock.verifier_quantite_sous_seuil(produit)
 
     assert resultat == booleen_attendu
+
+
+@pytest.mark.parametrize(
+    ("produit", "booleen_attendu"),
+    [
+        ({"nom": "Banane", "quantite": 3, "seuil": 5, "prix": 0.35}, False),
+        ({"nom": "Coco", "quantite": 3, "seuil": 1, "prix": 0.0}, True),
+    ]
+)
+
+
+def test_verifier_prix_nul(produit, booleen_attendu):
+    resultat = gestion_stock.verifier_prix_nul(produit)
+
+    assert resultat == booleen_attendu
