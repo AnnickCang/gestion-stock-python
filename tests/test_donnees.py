@@ -1,12 +1,17 @@
 import pytest
 
+from constantes_tests import CLE_NOM, CLE_PRIX, CLE_QUANTITE, CLE_SEUIL
 import donnees
 
-CLE_NOM = "nom"
-CLE_QUANTITE = "quantite"
-CLE_SEUIL = "seuil"
-CLE_PRIX = "prix"
-
+MSG_CONVERTI_A_ZERO = (
+    f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+)
+MSG_CHAMP_INEXISTANT = (
+    f"Le champ '{CLE_QUANTITE}' n'existe pas et a été créé avec une valeur à 0."
+)
+MSG_CONVERTI_EN_ENTIER = (
+    f"Le champ '{CLE_QUANTITE}' a été converti en 'int', sa valeur peut être tronquée."
+)
 
 @pytest.mark.parametrize(
     ("objet_teste", "resultat_attendu"),
@@ -39,37 +44,37 @@ def test__verifier_structure_stock(objet_teste, resultat_attendu):
         (
             {CLE_NOM: "banane", CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' n'existe pas et a été créé avec une valeur à 0."
+            MSG_CHAMP_INEXISTANT
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: True, CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: -5, CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: -1.5, CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: 2.7, CLE_SEUIL: 3, CLE_PRIX: 0.5},
             2,
-            f"Le champ '{CLE_QUANTITE}' a été converti en 'int', sa valeur peut être tronquée."
+            MSG_CONVERTI_EN_ENTIER
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: "oups", CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: "-5.2", CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
         (
             {CLE_NOM: "banane", CLE_QUANTITE: "3.8", CLE_SEUIL: 3, CLE_PRIX: 0.5},
@@ -79,7 +84,7 @@ def test__verifier_structure_stock(objet_teste, resultat_attendu):
         (
             {CLE_NOM: "banane", CLE_QUANTITE: [1, 2, 3], CLE_SEUIL: 3, CLE_PRIX: 0.5},
             0,
-            f"Le champ '{CLE_QUANTITE}' a été converti en nombre avec une valeur à 0."
+            MSG_CONVERTI_A_ZERO
         ),
     ]
 )

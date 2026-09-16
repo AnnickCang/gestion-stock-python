@@ -1,5 +1,6 @@
 import pytest
 
+from constantes_tests import CLE_NOM, CLE_PRIX, CLE_QUANTITE, CLE_SEUIL
 import gestion_stock
 import types_structure
 
@@ -8,19 +9,19 @@ import types_structure
     ("nom_recherche", "produit_attendu"),
     [
         ("banane", None),
-        ("café", {"nom": "Café", "quantite": 3, "seuil": 2, "prix": 18.5}),
-        ("cafe", {"nom": "Café", "quantite": 3, "seuil": 2, "prix": 18.5}),
+        ("café", {CLE_NOM: "Café", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 18.5}),
+        ("cafe", {CLE_NOM: "Café", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 18.5}),
     ],
 )
 
 
 def test_trouver_produit(nom_recherche, produit_attendu):
     stock: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 15, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 3, "seuil": 2, "prix": 18.5},
-        {"nom": "CHOCOLAT", "quantite": 1, "seuil": 2, "prix": 3.75},
-        {"nom": "M&M's", "quantite": 10, "seuil": 3, "prix": 2.5},
-        {"nom": "Tomate cerise", "quantite": 5, "seuil": 10, "prix": 0.75},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 15, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "CHOCOLAT", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 3.75},
+        {CLE_NOM: "M&M's", CLE_QUANTITE: 10, CLE_SEUIL: 3, CLE_PRIX: 2.5},
+        {CLE_NOM: "Tomate cerise", CLE_QUANTITE: 5, CLE_SEUIL: 10, CLE_PRIX: 0.75},
     ]
 
     resultat = gestion_stock.trouver_produit(stock, nom_recherche)
@@ -30,13 +31,13 @@ def test_trouver_produit(nom_recherche, produit_attendu):
 
 def test_ajouter_produit():
     stock: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 15, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 3, "seuil": 2, "prix": 18.5},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 15, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 18.5},
     ]
     stock_attendu: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 15, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 3, "seuil": 2, "prix": 18.5},
-        {"nom": "CHOCOLAT", "quantite": 1, "seuil": 2, "prix": 3.75},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 15, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "CHOCOLAT", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 3.75},
     ]
     nom = "CHOCOLAT"
     quantite = 1
@@ -50,19 +51,19 @@ def test_ajouter_produit():
 
 def test_modifier_produit():
     produit_a_modifier: types_structure.Produit = {
-        "nom": "CHOCOLAT",
-        "quantite": 1,
-        "seuil": 2,
-        "prix": 3.75
+        CLE_NOM: "CHOCOLAT",
+        CLE_QUANTITE: 1,
+        CLE_SEUIL: 2,
+        CLE_PRIX: 3.75
     }
     nouvelle_quantite = 5
     nouveau_seuil = 3
     nouveau_prix = 2.233
     produit_attendu: types_structure.Produit = {
-        "nom": "CHOCOLAT",
-        "quantite": 5,
-        "seuil": 3,
-        "prix": 2.23
+        CLE_NOM: "CHOCOLAT",
+        CLE_QUANTITE: 5,
+        CLE_SEUIL: 3,
+        CLE_PRIX: 2.23
     }
 
     gestion_stock.modifier_produit(
@@ -77,16 +78,16 @@ def test_modifier_produit():
 
 def test_trouver_alertes():
     stock: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
-        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
-        {"nom": "M&M's", "quantite": 10, "seuil": 3, "prix": 2.5},
-        {"nom": "noix de Cajou", "quantite": 10, "seuil": 10, "prix": 0.75},
-        {"nom": "Tomate cerise", "quantite": 5, "seuil": 10, "prix": 0.75},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 5, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "CHOCOLAT", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 3.75},
+        {CLE_NOM: "M&M's", CLE_QUANTITE: 10, CLE_SEUIL: 3, CLE_PRIX: 2.5},
+        {CLE_NOM: "noix de Cajou", CLE_QUANTITE: 10, CLE_SEUIL: 10, CLE_PRIX: 0.75},
+        {CLE_NOM: "Tomate cerise", CLE_QUANTITE: 5, CLE_SEUIL: 10, CLE_PRIX: 0.75},
     ]
     alertes_attendues: list[types_structure.Produit] = [
-        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
-        {"nom": "Tomate cerise", "quantite": 5, "seuil": 10, "prix": 0.75},
+        {CLE_NOM: "Café", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "Tomate cerise", CLE_QUANTITE: 5, CLE_SEUIL: 10, CLE_PRIX: 0.75},
     ]
 
     resultat = gestion_stock.trouver_alertes(stock)
@@ -96,19 +97,19 @@ def test_trouver_alertes():
 
 def test_supprimer_produit():
     stock: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
-        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 5, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "CHOCOLAT", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 3.75},
     ]
     produit_a_supprimer: types_structure.Produit = {
-        "nom": "Café",
-        "quantite": 1,
-        "seuil": 2,
-        "prix": 18.5
+        CLE_NOM: "Café",
+        CLE_QUANTITE: 1,
+        CLE_SEUIL: 2,
+        CLE_PRIX: 18.5
     }
     stock_attendu: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
-        {"nom": "CHOCOLAT", "quantite": 3, "seuil": 2, "prix": 3.75},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 5, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "CHOCOLAT", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 3.75},
     ]
 
     gestion_stock.supprimer_produit(stock, produit_a_supprimer)
@@ -118,18 +119,18 @@ def test_supprimer_produit():
 
 def test_renommer_produit():
     produit: types_structure.Produit = {
-        "nom": "Café",
-        "quantite": 1,
-        "seuil": 2,
-        "prix": 18.5
+        CLE_NOM: "Café",
+        CLE_QUANTITE: 1,
+        CLE_SEUIL: 2,
+        CLE_PRIX: 18.5
     }
     nouveau_nom = "Décaféiné"
     produit_attendu: types_structure.Produit = {
-            "nom": "Décaféiné",
-            "quantite": 1,
-            "seuil": 2,
-            "prix": 18.5
-        }
+        CLE_NOM: "Décaféiné",
+        CLE_QUANTITE: 1,
+        CLE_SEUIL: 2,
+        CLE_PRIX: 18.5
+    }
 
     gestion_stock.renommer_produit(produit, nouveau_nom)
 
@@ -148,9 +149,9 @@ def test_renommer_produit():
 
 def test_verifier_nom_disponible(ancien_nom, nouveau_nom, booleen_attendu):
     stock: list[types_structure.Produit] = [
-        {"nom": "bonbon", "quantite": 5, "seuil": 5, "prix": 0.5},
-        {"nom": "Café", "quantite": 1, "seuil": 2, "prix": 18.5},
-        {"nom": "deca", "quantite": 3, "seuil": 2, "prix": 15.0},
+        {CLE_NOM: "bonbon", CLE_QUANTITE: 5, CLE_SEUIL: 5, CLE_PRIX: 0.5},
+        {CLE_NOM: "Café", CLE_QUANTITE: 1, CLE_SEUIL: 2, CLE_PRIX: 18.5},
+        {CLE_NOM: "deca", CLE_QUANTITE: 3, CLE_SEUIL: 2, CLE_PRIX: 15.0},
     ]
     resultat = gestion_stock.verifier_nom_disponible(stock, ancien_nom, nouveau_nom)
 
@@ -160,9 +161,9 @@ def test_verifier_nom_disponible(ancien_nom, nouveau_nom, booleen_attendu):
 @pytest.mark.parametrize(
     ("produit", "booleen_attendu"),
     [
-        ({"nom": "Banane", "quantite": 3, "seuil": 5, "prix": 0.35}, True),
-        ({"nom": "Coco", "quantite": 3, "seuil": 1, "prix": 1.5}, False),
-        ({"nom": "Fraise", "quantite": 15, "seuil": 15, "prix": 0.15}, False),
+        ({CLE_NOM: "Banane", CLE_QUANTITE: 3, CLE_SEUIL: 5, CLE_PRIX: 0.35}, True),
+        ({CLE_NOM: "Coco", CLE_QUANTITE: 3, CLE_SEUIL: 1, CLE_PRIX: 1.5}, False),
+        ({CLE_NOM: "Fraise", CLE_QUANTITE: 15, CLE_SEUIL: 15, CLE_PRIX: 0.15}, False),
     ]
 )
 
@@ -176,8 +177,8 @@ def test_verifier_quantite_sous_seuil(produit, booleen_attendu):
 @pytest.mark.parametrize(
     ("produit", "booleen_attendu"),
     [
-        ({"nom": "Banane", "quantite": 3, "seuil": 5, "prix": 0.35}, False),
-        ({"nom": "Coco", "quantite": 3, "seuil": 1, "prix": 0.0}, True),
+        ({CLE_NOM: "Banane", CLE_QUANTITE: 3, CLE_SEUIL: 5, CLE_PRIX: 0.35}, False),
+        ({CLE_NOM: "Coco", CLE_QUANTITE: 3, CLE_SEUIL: 1, CLE_PRIX: 0.0}, True),
     ]
 )
 
